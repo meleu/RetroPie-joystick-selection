@@ -11,7 +11,7 @@ echo "Checking if \"$HOME/bin\" exists, creating it if doesn't..."
 [ -d "$HOME/bin" ] || mkdir "$HOME/bin";
 
 echo "Compiling \"jslist.c\" and putting it in \"$HOME/bin\"..."
-gcc jslist.c -o jslist $(sdl2-config --cflags --libs) || {
+gcc jslist.c -o "$HOME/bin/jslist" $(sdl2-config --cflags --libs) || {
     echo "Something wrong with compilation process. Aborting..."
     exit 1
 }
