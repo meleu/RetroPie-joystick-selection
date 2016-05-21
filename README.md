@@ -29,7 +29,7 @@ It's a bash script to let the user choose the controllers to use for players 1-4
 
 ## install.sh
 A bash script to perform the following tasks:
-- create $HOME/bin directory.
-- compile jslist.c and put the executable in $HOME/bin directory.
-- put input_selection.sh in $HOME/bin directory.
-- certifies that $HOME/bin is in your PATH.
+- create `$HOME/bin` directory.
+- compile jslist.c and put the executable in `$HOME/bin` directory.
+- put input_selection.sh in `$HOME/bin` directory.
+- certifies that `$HOME/bin` is in your PATH.
