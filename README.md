@@ -8,7 +8,17 @@ This repository contains the following files:
 - input_selection.sh
 - install.sh
 
-## jslist.c
+
+## Installation
+It's pretty simple to install. Perform these commands on your RetroPie bash prompt:
+```
+git clone https://github.com/meleu/RetroPie-input-selection
+cd RetroPie-input-selection
+sh install.sh
+```
+
+## File Description
+### jslist.c
 It's a small program to list all the joysticks available on the system and their respective index. The output format is:
 index:Joystick Name
 
@@ -23,11 +33,11 @@ Example:
 jslist returns a non-zero value if no joystick found.
 
 
-## input_selection.sh
+### input_selection.sh
 It's a bash script to let the user choose the controllers to use for players 1-4 in RetroArch. It relies on the output of the jslist.c to work properly.
 
 
-## install.sh
+### install.sh
 A bash script to perform the following tasks:
 - create `$HOME/bin` directory.
 - compile jslist.c and put the executable in `$HOME/bin` directory.
