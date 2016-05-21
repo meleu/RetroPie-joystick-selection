@@ -13,8 +13,7 @@ It's a small program to list all the joysticks available on the system and their
 index:Joystick Name
 
 Example:
-```
-Example:
+```Example:
 [prompt]$ jslist
 0:Twin USB Joystick
 1:Twin USB Joystick
