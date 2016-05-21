@@ -20,7 +20,7 @@ sh install.sh
 
 After that you are ready to use it via `input_selection.sh` command.
 ```
-[prompt] $ input_selection.sh
+[prompt]$ input_selection.sh
 ```
 
 
