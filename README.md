@@ -18,6 +18,12 @@ cd RetroPie-input-selection
 sh install.sh
 ```
 
+## Known Issues
+Due to the dynamic nature of bluetooth connections, there are some problems that can happen. Example:
+- If you configure a bluetooth controller as Player 1, and somehow lose the connection during a game, it'll be annoying to exit RetroArch (connect to RetroPie via ssh and kill RetroArch process, if your raspi isn't connected... :( You have to unplug your power supply.).
+- If you restart your raspi or change the joystick list (adding/removing devices), you have to run `input_selection.sh` again.
+
+
 ## Files Description
 ### jslist.c
 It's a small program to list all the joysticks available on the system and their respective index. The output format is:
