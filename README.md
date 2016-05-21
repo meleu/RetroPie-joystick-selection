@@ -19,12 +19,14 @@ sh install.sh
 ```
 
 After that you are ready to use it via `input_selection.sh` command.
-```[prompt] $ input_selection.sh```
+```
+[prompt] $ input_selection.sh
+```
 
 
 ## Known Issues
-Due to the dynamic nature of bluetooth connections, there are some problems that can happen. Example:
-- If you configure a bluetooth controller as Player 1, and somehow lose the connection during a game, it'll be annoying to exit RetroArch (connect to RetroPie via ssh and kill RetroArch process. If your raspi isn't connected... :( I think you'll have to unplug your power supply.).
+Due to the dynamic nature of bluetooth connections, there are some problems that can happen. Examples:
+- If you configure a bluetooth controller as Player 1, and somehow lose the connection during a game, it'll be annoying to exit RetroArch (connect to RetroPie via ssh and kill RetroArch process. If your raspi isn't connected, :( I think you'll have to unplug your power supply.).
 - If you restart your raspi or change the joystick list (adding/removing devices), you have to run `input_selection.sh` again.
 
 
