@@ -1,5 +1,5 @@
 # RetroPie-input-selection
-A script to let the user choose the controllers to use for players 1-4 in RetroArch. It shows several user-friendly dialog boxes to perform this task.
+A script to let the user choose the controllers to use for RetroArch players 1-4. It shows several user-friendly dialog boxes to perform this task.
 
 This was made for use with RetroPie [https://retropie.org.uk/].
 
@@ -8,6 +8,7 @@ This repository contains the following files:
 - input_selection.sh
 - install.sh
 
+*2016-05-21*: This is the very first version. Please give me feedback if problems occur.
 
 ## Installation
 It's pretty simple to install. Perform these commands on your RetroPie bash prompt:
@@ -23,7 +24,8 @@ It's a small program to list all the joysticks available on the system and their
 index:Joystick Name
 
 Example:
-```Example:
+```
+Example:
 [prompt]$ jslist
 0:Twin USB Joystick
 1:Twin USB Joystick
@@ -34,7 +36,7 @@ jslist returns a non-zero value if no joystick found.
 
 
 ### input_selection.sh
-It's a bash script to let the user choose the controllers to use for players 1-4 in RetroArch. It relies on the output of the jslist.c to work properly.
+It's a bash script to let the user choose the controllers to use for RetroArch players 1-4, showing several user-friendly dialog boxes to perform this task. It relies on the output of the jslist.c to work properly.
 
 
 ### install.sh
