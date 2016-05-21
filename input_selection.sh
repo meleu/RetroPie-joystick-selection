@@ -38,7 +38,7 @@ grep -q '^#include "/opt/retropie/configs/all/input-selection.cfg"$' $retroarchc
       --title "Error" \
       --yesno \
 "Your retroarch.cfg isn't properly configured to work with this method of \
-input selection. You need to put the following line on your \"$retroarchcfg\"\
+input selection. You need to put the following line on your \"$retroarchcfg\" \
 (preferably at the beginning)\
 \n\n#include \"/opt/retropie/configs/all/input-selection.cfg\"\n\n\
 Do you want me to put it at the beginning of the retroarch.cfg now?\
