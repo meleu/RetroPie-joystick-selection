@@ -1,21 +1,38 @@
 /* jslist.c
  * This little program just list the joysticks connected to the system.
  * The ouput format is "index:JoystickName".
+ * It returns a non-zero value if no joystick was found; otherwise, zero.
  */
 
 #include <stdio.h>
 #include "SDL.h"
 
-int main(void) {
-	int num_joy, i;
+int main(int argc, char *argv[]) {
+    int num_joy, i;
 
-	SDL_Init(SDL_INIT_JOYSTICK);
+    if(argc > 1) {
+        printf("%s%s%s%s",
+            "\nThis program lists the joysticks connected to the system.\n",
+            "It returns a non-zero value if no joystick was found.\n",
+	    "The ouput format is:\nindex:JoystickName\n\n",
+            "Usage: jslist\n\n");
 
-	num_joy = SDL_NumJoysticks();
+        return 1;
+    }
 
-	for(i = 0; i < num_joy; i++)
-		printf("%d:%s\n", i, SDL_JoystickNameForIndex(i));
+    SDL_Init(SDL_INIT_JOYSTICK);
 
-	SDL_Quit();
-	return 0;
+    num_joy = SDL_NumJoysticks();
+
+    if(num_joy < 1) {
+        fputs("No joystick found!\n", stderr);
+        SDL_Quit();
+        return -1;
+    }
+
+    for(i = 0; i < num_joy; i++)
+        printf("%d:%s\n", i, SDL_JoystickNameForIndex(i));
+
+    SDL_Quit();
+    return 0;
 }
