@@ -10,4 +10,4 @@ It's a small program to list all the joysticks available on the system and their
 
 
 ## input_selection.sh
-It's a bash script to let the user choose the controllers for players 1-4.
+It's a bash script to let the user choose the controllers for players 1-4. It relies on the output of the jslist.c to work properly.
