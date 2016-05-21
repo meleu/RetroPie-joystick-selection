@@ -47,7 +47,7 @@ Do you want me to put it at the beginning of the retroarch.cfg now?\
 
     # Put the "#include ..." at the beginning line of retroarch.cfg
     sed -i "1i\
-# $(date +%Y-%m-%d): The following line was added to allow input selection\
+# $(date +%Y-%m-%d): The following line was added to allow input selection\n\
 #include \"/opt/retropie/configs/all/input-selection.cfg\"\n" $retroarchcfg
 }
 
