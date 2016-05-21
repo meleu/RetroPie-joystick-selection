@@ -22,7 +22,7 @@
 #      - [robustness] verify if the "#include ...input-selection.cfg" line
 #        is before any input_playerN_joypad_index in the retroarch.cfg.
 #      - if jslist is not in the PATH, download it from github, compile it,
-#        and put it in /home/pi/bin directory.
+#        and put it in $HOME/bin directory.
 #
 # meleu, 2016/05/21
 
@@ -33,12 +33,13 @@ retroarchcfg="/opt/retropie/configs/all/retroarch.cfg"
 inputcfg="/opt/retropie/configs/all/input-selection.cfg"
 
 # checking if the "#include ..." line is in the retroarch.cfg
-grep '^#include "/opt/retropie/configs/all/input-selection.cfg"$' $retroarchcfg > /dev/null || {
+grep -q '^#include "/opt/retropie/configs/all/input-selection.cfg"$' $retroarchcfg || {
     dialog \
       --title "Error" \
       --yesno \
 "Your retroarch.cfg isn't properly configured to work with this method of \
 input selection. You need to put the following line on your \"$retroarchcfg\"\
+(preferably at the beginning)\
 \n\n#include \"/opt/retropie/configs/all/input-selection.cfg\"\n\n\
 Do you want me to put it at the beginning of the retroarch.cfg now?\
 \n(if you choose \"No\", I will stop now)" \
@@ -71,6 +72,7 @@ which jslist > /dev/null || {
 # the jslist returns a non-zero value if it fails or doesn't find any joystick
 jslist > $tempFile || {
     dialog --title "Fail!" --msgbox "No joystick found. :(" 5 40 
+    rm -f $tempFile
     exit 1
 }
 
