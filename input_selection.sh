@@ -19,14 +19,22 @@
 # TODO:
 #      - show the current config (with the joystick names) before start
 #        and let the user quit.
+#      - show the config at the end and let the user confirm.
 #      - [robustness] verify if the "#include ...input-selection.cfg" line
 #        is before any input_playerN_joypad_index in the retroarch.cfg.
+#      - [robustness] verify if the input-selection.cfg has all the 4
+#        input_playerN_joypad_index; if don't, create a default file.
 #
 # meleu, 2016/05
 
 
-rootdir="/opt/retropie"
-configdir="$rootdir/configs"
+configdir="/opt/retropie/configs"
+
+user="$SUDO_USER"
+[[ -z "$user" ]] && user=$(id -un)
+home="$(eval echo ~$user)"
+
+jslist_exe="$home/bin/jslist"
 
 js_list_file="/tmp/jslist-$$"
 temp_file="${js_list_file}_d"
@@ -34,8 +42,9 @@ retroarchcfg="$configdir/all/retroarch.cfg"
 inputcfg="$configdir/all/input-selection.cfg"
 
 
-# borrowed code from runcommand.sh ############################################
-# The joy2key.py aren't documented, so I don't know how to use it... :(
+# borrowed code from runcommand.sh
+# The joy2key.py aren't documented, so I needed to borrow this code
+###############################################################################
 function start_joy2key() {
     # if joy2key.py is installed run it with cursor keys for axis,
     # and enter + tab for buttons 0 and 1
@@ -51,7 +60,8 @@ function stop_joy2key() {
         kill -INT "$__joy2key_pid"
     fi
 }
-# end of the borrowed code from runcommand.sh #################################
+# end of the borrowed code from runcommand.sh
+###############################################################################
 
 
 start_joy2key
@@ -80,8 +90,9 @@ Do you want me to put it at the beginning of the retroarch.cfg now?\
 #include \"$configdir/all/input-selection.cfg\"\n" $retroarchcfg
 } # end of failed grep
 
-# if the input-selection.cfg doesn't exist, create it with default values
-[[ -f "$inputcfg" ]] || {
+# if the input-selection.cfg doesn't exist or is empty, create it with
+# default values
+[[ -s "$inputcfg" ]] || {
     cat << _EOF_ > $inputcfg
 # This file is used to choose what controller to use for each player.
 input_player1_joypad_index = "0"
@@ -89,17 +100,21 @@ input_player2_joypad_index = "1"
 input_player3_joypad_index = "2"
 input_player4_joypad_index = "3"
 _EOF_
+    chown pi.pi $inputcfg
 }
 
-# checking if jslist is on the PATH
-which jslist > /dev/null || {
-    dialog --title "Fail!" --msgbox "\"jslist\" not found!" 5 40 
+# checking if jslist exists and is executable
+[[ -x "$jslist_exe" ]] || {
+    dialog \
+      --title "Fail!"
+      --msgbox "\"$jslist_exe\" not found or isn't executable!" \
+      5 40 
     stop_joy2key
     exit 1
 }
 
 # the jslist returns a non-zero value if it doesn't find any joystick
-jslist > $temp_file || {
+$jslist_exe > $temp_file || {
     dialog --title "Fail!" --msgbox "No joystick found. :(" 5 40 
     rm -f $temp_file
     stop_joy2key
@@ -124,16 +139,18 @@ for i in $(seq 1 4); do
     # to use as dialog menu options
     dialogOptions=$(sed 's/:\(.*\)/ "\1"/' $js_list_file)
 
-    echo "$dialogOptions" |
-    xargs dialog \
-        --title "Input selection" \
-        --menu "Which controller you want to use for Player $i?" \
-        0 0 0 2> $temp_file
+    echo "$dialogOptions" \
+    | xargs dialog \
+      --title "Input selection" \
+      --menu "Which controller you want to use for Player $i?" \
+      0 0 0 2> $temp_file
 
     js_index=$(cat $temp_file)
 
     # Here is the magic! Change the input_playerX_joypad_index in retroarch.cfg
-    sed "s/^input_player${i}_joypad_index.*/input_player${i}_joypad_index = \"$js_index\"/" $inputcfg > $temp_file
+    sed \
+      "s/^input_player${i}_joypad_index.*/input_player${i}_joypad_index = \"$js_index\"/" \
+      $inputcfg > $temp_file
 
     mv $temp_file $inputcfg
 done
