@@ -8,6 +8,7 @@ This repository contains the following files:
 - input_selection.sh
 - install.sh
 
+*2016-05-22*: Added joystick and RetroPie menu support.
 *2016-05-21*: This is the very first version. Please give me feedback if problems occur.
 
 ## Installation
@@ -57,3 +58,4 @@ A bash script to perform the following tasks:
 - compile jslist.c and put the executable in `$HOME/bin` directory.
 - put input_selection.sh in `$HOME/bin` directory.
 - certifies that `$HOME/bin` is in your PATH.
+- create a symbolic link to `$HOME/bin/input_selection.sh` named `$HOME/RetroPie/retropiemenu/input_selection.sh`. This will add input_selection to your RetroPie menu in emulationstation.
