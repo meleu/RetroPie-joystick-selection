@@ -19,7 +19,7 @@ sh install.sh
 
 After that you are ready to use it via RetroPie menu in emulationstation (or via `input_selection.sh` command at the bash prompt).
 
-*OBS.*: The "Parse Gamelists Only" option must be off to let the input_selection be shown in RetroPie menu [Start button on emulationstation -> Other Settings -> Parse Gamelists Only].
+*OBS.*: The "Parse Gamelists Only" option must be off to let the input_selection be shown in RetroPie menu. [Start button on emulationstation -> Other Settings -> Parse Gamelists Only]. This is the default, so if you didn't change it, don't worry. 
 
 
 ## Known Issues
