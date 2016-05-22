@@ -19,6 +19,8 @@ sh install.sh
 
 After that you are ready to use it via RetroPie menu in emulationstation (or via `input_selection.sh` command at the bash prompt).
 
+*OBS.*: The "Parse Gamelists Only" option must be off to let the input_selection be shown in RetroPie menu [Start button on emulationstation -> Other Settings -> Parse Gamelists Only].
+
 
 ## Known Issues
 Due to the dynamic nature of bluetooth connections, there are some problems that can happen. Examples:
