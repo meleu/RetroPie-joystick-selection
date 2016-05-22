@@ -10,6 +10,7 @@ This repository contains the following files:
 
 
 *2016-05-22*: Added joystick and RetroPie menu support.
+
 *2016-05-21*: This is the very first version. Please give me feedback if problems occur.
 
 ## Installation
