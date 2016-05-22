@@ -36,7 +36,7 @@ Due to the dynamic nature of bluetooth connections, there are some problems that
 ## Files Description
 ### jslist.c
 It's a small program to list all the joysticks available on the system and their respective index. The output format is:
-index:Joystick Name
+`index:Joystick Name`
 
 Example:
 ```
