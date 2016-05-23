@@ -8,7 +8,6 @@ This repository contains the following files:
 - input_selection.sh
 - install.sh
 
-*2016-05-21*: This is the very first version. Please give me feedback if problems occur.
 
 ## Installation
 It's pretty simple to install. Perform these commands on your RetroPie bash prompt:
@@ -18,22 +17,28 @@ cd RetroPie-input-selection
 sh install.sh
 ```
 
-After that you are ready to use it via `input_selection.sh` command.
-```
-[prompt]$ input_selection.sh
-```
+After that you are ready to use it via RetroPie menu in emulationstation (or via `input_selection.sh` command at the bash prompt).
+
+*OBS.*: The "Parse Gamelists Only" option must be off to let the input_selection be shown in RetroPie menu. [Start button on emulationstation -> Other Settings -> Parse Gamelists Only]. This is the default, so if you didn't change it, don't worry. 
 
 
 ## Known Issues
 Due to the dynamic nature of bluetooth connections, there are some problems that can happen. Examples:
 - If you configure a bluetooth controller as Player 1, and somehow lose the connection during a game, it'll be annoying to exit RetroArch (connect to RetroPie via ssh and kill RetroArch process. If your raspi isn't connected, :( I think you'll have to unplug your power supply.).
-- If you restart your raspi or change the joystick list (adding/removing devices), you have to run `input_selection.sh` again.
+- If you restart your raspi or change the joystick list order (adding/removing devices), you have to run `input_selection.sh` again.
+
+
+## Changelog
+
+*2016-05-22*: Added joystick and RetroPie menu support.
+
+*2016-05-21*: This is the very first version. Please give me feedback if problems occur.
 
 
 ## Files Description
 ### jslist.c
 It's a small program to list all the joysticks available on the system and their respective index. The output format is:
-index:Joystick Name
+`index:Joystick Name`
 
 Example:
 ```
@@ -57,3 +62,4 @@ A bash script to perform the following tasks:
 - compile jslist.c and put the executable in `$HOME/bin` directory.
 - put input_selection.sh in `$HOME/bin` directory.
 - certifies that `$HOME/bin` is in your PATH.
+- create a symbolic link to `$HOME/bin/input_selection.sh` named `$HOME/RetroPie/retropiemenu/input_selection.sh`. This will add input_selection to your RetroPie menu in emulationstation.
