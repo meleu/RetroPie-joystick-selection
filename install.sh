@@ -9,8 +9,10 @@
 # - create a symbolic link to $HOME/bin/input_selection.sh named
 #   $HOME/RetroPie/retropiemenu/input_selection.sh
 #
-# TODO: - edit /opt/retropie/configs/all/emulationstation/gamelists/retropie/gamelist.xml
-#         to add an input_selection.sh description
+# TODO:
+# - edit the 
+#   /opt/retropie/configs/all/emulationstation/gamelists/retropie/gamelist.xml
+#   to add an input_selection.sh description
 
 echo -n "Checking if \"$HOME/bin\" exists, creating it if doesn't..."
 [[ -d "$HOME/bin" ]] || mkdir "$HOME/bin"
