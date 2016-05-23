@@ -52,6 +52,7 @@ function stop_joy2key() {
 # end of the borrowed code from runcommand.sh
 ###############################################################################
 
+
 ###############################################################################
 # Checking the following:
 #   - if retroarch.cfg has the "#include" line for input-selection.cfg, in

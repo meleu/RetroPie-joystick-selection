@@ -13,6 +13,7 @@
 # - edit the 
 #   /opt/retropie/configs/all/emulationstation/gamelists/retropie/gamelist.xml
 #   to add an input_selection.sh description
+#
 
 echo -n "Checking if \"$HOME/bin\" exists, creating it if doesn't..."
 [[ -d "$HOME/bin" ]] || mkdir "$HOME/bin"
