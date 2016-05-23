@@ -30,7 +30,7 @@ Due to the dynamic nature of bluetooth connections, there are some problems that
 
 ## Changelog
 
-*2016-05-23*: Show the current config to the user and let he/she decide to keep it or not. Also show the configurations made at the end of the process and give the chance to accept it or not.
+*2016-05-23*: Show the current config and give the chance to keep it or not. Also show the configurations made at the end of the process and give the chance to accept it or not.
 
 *2016-05-22*: Added joystick and RetroPie menu support.
 
