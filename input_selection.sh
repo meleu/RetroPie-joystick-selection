@@ -64,7 +64,7 @@ function check_files() {
     start_joy2key
     # checking if the "#include ..." line is in the retroarch.cfg
     grep -q \
-      "^#include \"$configdir/all/input-selection.cfg\"$"\
+      "^#include \"$inputcfg\"$"\
       $retroarchcfg || {
           dialog \
             --title "Error" \
@@ -72,7 +72,7 @@ function check_files() {
 "Your retroarch.cfg isn't properly configured to work with this method of \
 input selection. You need to put the following line on your \"$retroarchcfg\" \
 (preferably at the beginning)\
-\n\n#include \"$configdir/all/input-selection.cfg\"\n\n\
+\n\n#include \"$inputcfg\"\n\n\
 Do you want me to put it at the beginning of the retroarch.cfg now?\
 \n(if you choose \"No\", I will stop now)" \
             0 0 || {
@@ -83,13 +83,13 @@ Do you want me to put it at the beginning of the retroarch.cfg now?\
           # Putting the "#include ..." at the beginning line of retroarch.cfg
           sed -i "1i\
 # $(date +%Y-%m-%d): The following line was added to allow input selection\n\
-#include \"$configdir/all/input-selection.cfg\"\n" $retroarchcfg
+#include \"$inputcfg\"\n" $retroarchcfg
     } # end of failed grep
 
     # if the input-selection.cfg doesn't exist or is empty, create it with
     # default values
     [[ -s "$inputcfg" ]] || {
-        cat << _EOF_ > $inputcfg
+        cat << _EOF_ > "$inputcfg"
 # This file is used to choose what controller to use for each player.
 input_player1_joypad_index = "0"
 input_player2_joypad_index = "1"
