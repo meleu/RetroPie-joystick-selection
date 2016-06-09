@@ -2,6 +2,9 @@
  * This little program just list the joysticks connected to the system.
  * The ouput format is "index:JoystickName".
  * It returns a non-zero value if no joystick was found; otherwise, zero.
+ *
+ * To compile (libsdl2 is installed by default on RetroPie):
+ * [prompt]$ gcc jslist.c -o jslist $(sdl2-config --cflags --libs)
  */
 
 #include <stdio.h>
