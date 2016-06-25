@@ -25,7 +25,7 @@ After that you are ready to use it via RetroPie menu in emulationstation.
 ## Known Issues
 Due to the dynamic nature of bluetooth connections, there are some issues that can happen. Examples:
 - If you configure a bluetooth controller as Player 1, and somehow lose the connection during a game, it'll be annoying to exit RetroArch (connect to RetroPie via ssh and kill RetroArch process. If your raspi isn't on the LAN, :( I think you'll have to unplug your power supply.).
-- If you change the joystick list order (adding/removing devices), your configuration changes too. So you have to run `joystick_selection.sh` again.
+- If the joystick list order changes (adding/removing devices), your configuration changes too. So you have to run `joystick_selection.sh` again.
 
 
 ## Changelog
