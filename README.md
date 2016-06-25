@@ -1,4 +1,4 @@
-# RetroPie-input-selection
+# RetroPie-joystick-selection
 A script to let the user choose the controllers to use for RetroArch players 1-4. It shows several user-friendly dialog boxes to perform this task.
 
 This was made for use with RetroPie [https://retropie.org.uk/].
