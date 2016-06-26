@@ -19,8 +19,6 @@ bash install.sh
 
 After that you are ready to use it via RetroPie menu in emulationstation.
 
-*OBS.*: The "Parse Gamelists Only" option must be off to let the joystick_selection be shown in RetroPie menu. This is the default, so if you didn't change it, don't worry. [Start button on emulationstation -> Other Settings -> Parse Gamelists Only]. 
-
 
 ## Known Issues
 Due to the dynamic nature of bluetooth connections, there are some issues that can happen. Examples:
@@ -30,13 +28,15 @@ Due to the dynamic nature of bluetooth connections, there are some issues that c
 
 ## Changelog
 
-*2016-06-25*: 1) Added an initial dialog menu. 2) Renamed the file `input_selection.sh` for `joystick_selection.sh` for a better description of what it does. 3) The files is no more at `$HOME/bin`, the jslist is at `/opt/retropie/supplementary` and joystick_selection.sh is directly at `$HOME/RetroPie/retropiemenu/`
+**2016-06-26**: now the install.sh creates a gamelist.xml entry for joystick_selection.sh.
 
-*2016-05-23*: Show the current config and give the chance to keep it or not. Also show the configurations made at the end of the process and give the chance to accept it or not.
+**2016-06-25**: 1) Added an initial dialog menu. 2) Renamed the file `input_selection.sh` for `joystick_selection.sh` for a better description of what it does. 3) The files is no more at `$HOME/bin`, the jslist is at `/opt/retropie/supplementary` and joystick_selection.sh is directly at `$HOME/RetroPie/retropiemenu/`
 
-*2016-05-22*: Added joystick and RetroPie menu support.
+**2016-05-23**: Show the current config and give the chance to keep it or not. Also show the configurations made at the end of the process and give the chance to accept it or not.
 
-*2016-05-21*: This is the very first version. Please give me feedback if problems occur.
+**2016-05-22**: Added joystick and RetroPie menu support.
+
+**2016-05-21**: This is the very first version. Please give me feedback if problems occur.
 
 
 ## Files Description
@@ -62,6 +62,7 @@ It's a bash script to let the user choose the controllers to use for RetroArch p
 
 ### install.sh
 A bash script to perform the following tasks:
-- check if the old "RetroPie-input-selection" scheme is installed and uninstall it if true.
-- compile jslist.c and put the executable in `/opt/retropie/supplementary/` directory.
-- put joystick_selection.sh in `$HOME/RetroPie/retropiemenu/` directory.
+- delete the old "RetroPie-input-selection" scheme if it's installed.
+- compile jslist.c and put the executable in /opt/retropie/supplementary/ directory.
+- put joystick_selection.sh in $HOME/RetroPie/retropiemenu/ directory.
+- create a gamelist.xml entry for joystick_selection.sh
