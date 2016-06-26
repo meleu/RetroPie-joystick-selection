@@ -5,15 +5,15 @@ This was made for use with RetroPie [https://retropie.org.uk/].
 
 This repository contains the following files:
 - jslist.c
-- ~~input_selection.sh~~ joystick_selection.sh
+- joystick_selection.sh (former input_selection.sh)
 - install.sh
 
 
 ## Installation
 It's pretty simple to install. Perform these commands on your RetroPie bash prompt:
 ```
-git clone https://github.com/meleu/RetroPie-input-selection
-cd RetroPie-input-selection
+git clone https://github.com/meleu/RetroPie-joystick-selection
+cd RetroPie-joystick-selection
 bash install.sh
 ```
 
