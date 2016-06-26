@@ -2,17 +2,13 @@
 # install.sh
 ##############
 # A bash script to perform the following tasks:
-# - check if the old "RetroPie-input-selection" scheme is installed and
-#   uninstall it if true.
+# - delete the old "RetroPie-input-selection" scheme if it's installed.
 # - compile jslist.c and put the executable in 
 #   /opt/retropie/supplementary/ directory.
 # - put joystick_selection.sh in $HOME/RetroPie/retropiemenu/ directory.
+# - create a gamelist.xml entry for joystick_selection.sh
 #
-# TODO:
-# - edit the 
-#   /opt/retropie/configs/all/emulationstation/gamelists/retropie/gamelist.xml
-#   to add an joystick_selection.sh description
-#
+
 
 rm -f \
   "$HOME/bin/jslist" \
@@ -20,6 +16,7 @@ rm -f \
   "$HOME/RetroPie/retropiemenu/input_selection.sh"
 
 rmdir "$HOME/bin" 2>/dev/null
+
 
 echo -n "Compiling \"jslist.c\" and putting it in \"/opt/retropie/supplementary/\"..."
 sudo gcc jslist.c \
@@ -29,6 +26,7 @@ sudo gcc jslist.c \
 }
 echo " OK!"
 
+
 echo -n "Putting \"joystick_selection.sh\" in \"$HOME/RetroPie/retropiemenu/\"..."
 cp joystick_selection.sh "$HOME/RetroPie/retropiemenu/joystick_selection.sh" || {
     echo -e "\nUnable to put \"joystick_selection.sh\" in \"$HOME/RetroPie/retropiemenu/\". Aborting."
@@ -36,3 +34,15 @@ cp joystick_selection.sh "$HOME/RetroPie/retropiemenu/joystick_selection.sh" || 
 }
 echo " OK!"
 
+
+gamelistxml="/opt/retropie/configs/all/emulationstation/gamelists/retropie/gamelist.xml"
+
+gamelist_info='\
+	<game>\
+		<path>.\/joystick_selection.sh<\/path>\
+		<name>Joystick Selection<\/name>\
+		<desc>Select which joystick to use for RetroArch players 1-4.<\/desc>\
+		<image><\/image>\
+	<\/game>'
+
+sudo sed -i.bak "/<\/gameList>/ s/.*/${gamelist_info}\n&/" "$gamelistxml"
