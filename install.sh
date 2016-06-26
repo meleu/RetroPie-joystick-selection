@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # install.sh
-##############
+#############
 # A bash script to perform the following tasks:
 # - delete the old "RetroPie-input-selection" scheme if it's installed.
 # - compile jslist.c and put the executable in 
@@ -35,8 +35,8 @@ cp joystick_selection.sh "$HOME/RetroPie/retropiemenu/joystick_selection.sh" || 
 echo " OK!"
 
 
+echo -n "Creating a gamelist.xml entry for joystick_selection.sh..."
 gamelistxml="/opt/retropie/configs/all/emulationstation/gamelists/retropie/gamelist.xml"
-
 gamelist_info='\
 	<game>\
 		<path>.\/joystick_selection.sh<\/path>\
@@ -45,4 +45,8 @@ gamelist_info='\
 		<image><\/image>\
 	<\/game>'
 
-sudo sed -i.bak "/<\/gameList>/ s/.*/${gamelist_info}\n&/" "$gamelistxml"
+sudo sed -i.bak "/<\/gameList>/ s/.*/${gamelist_info}\n&/" "$gamelistxml" || {
+    echo "Warning: Unable to edit \"$gamelistxml\"."
+    exit 1
+}
+echo " OK!"
