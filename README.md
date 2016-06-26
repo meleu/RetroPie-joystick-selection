@@ -30,7 +30,7 @@ Due to the dynamic nature of bluetooth connections, there are some issues that c
 
 ## Changelog
 
-*2016-06-25*: 1) Added an initial dialog menu. 2) Renamed the file `input_selection.sh` for `joystick_selection.sh` for a better description of what it does. 2) The files is no more at `$HOME/bin`, the jslist is at `/opt/retropie/supplementary` and joystick_selection.sh is directly at `$HOME/RetroPie/retropiemenu/`
+*2016-06-25*: 1) Added an initial dialog menu. 2) Renamed the file `input_selection.sh` for `joystick_selection.sh` for a better description of what it does. 3) The files is no more at `$HOME/bin`, the jslist is at `/opt/retropie/supplementary` and joystick_selection.sh is directly at `$HOME/RetroPie/retropiemenu/`
 
 *2016-05-23*: Show the current config and give the chance to keep it or not. Also show the configurations made at the end of the process and give the chance to accept it or not.
 
