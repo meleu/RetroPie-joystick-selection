@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # joystick_selection.sh
-#####################
+#######################
 # Show the available joysticks and let the user choose what controller to
 # use for RetroArch Player 1-4.
 #
@@ -9,8 +9,8 @@
 #
 # Short description of what this script does:
 # - puts at the beginning of $configdir/all/retroarch.cfg an "#include" 
-#   pointing to the file $configdir/all/input-selection.cfg
-# - let the user manage the input-selection.cfg through dialogs (this file
+#   pointing to the file $configdir/all/joystick-selection.cfg
+# - let the user manage the joystick-selection.cfg through dialogs (this file
 #   contains the configs for input_playerN_joypad_index for players 1-4).
 #
 # OBS.: the joystick selection doesn't work if the config_save_on_exit is set
@@ -19,7 +19,7 @@
 # TODO:
 #      - implement the same functionality for non-libretro emulators.
 #      - [robustness] alert the user if the Player 1 has no joystick.
-#      - [robustness] verify if the "#include ...input-selection.cfg" line
+#      - [robustness] verify if the "#include ...joystick-selection.cfg" line
 #        is before any input_playerN_joypad_index in the retroarch.cfg.
 #
 # meleu, 2016/06
@@ -34,7 +34,7 @@ jslist_exe="/opt/retropie/supplementary/jslist"
 
 js_list_file="/tmp/jslist-$$"
 retroarchcfg="$configdir/all/retroarch.cfg"
-inputcfg="$configdir/all/input-selection.cfg"
+jscfg="$configdir/all/joystick-selection.cfg"
 
 
 # borrowed code from runcommand.sh
@@ -93,10 +93,10 @@ function safe_exit() {
 function default_input_config() {
     [[ "$1" ]] || fatalError "default_input_config: missing argument!"
 
-    local temp_inputcfg
-    temp_inputcfg="$1"
+    local temp_jscfg
+    temp_jscfg="$1"
 
-    cat << _EOF_ > "$temp_inputcfg"
+    cat << _EOF_ > "$temp_jscfg"
 # This file is used to choose which controller to use for each player.
 input_player1_joypad_index = "0"
 input_player2_joypad_index = "1"
@@ -110,7 +110,7 @@ _EOF_
         return 1
     fi
 
-    chown $user.$user "$temp_inputcfg"
+    chown $user.$user "$temp_jscfg"
 }
 
 
@@ -153,14 +153,14 @@ function fill_js_list_file() {
 
 ###############################################################################
 # Checking the following:
-#   - if retroarch.cfg has the "#include" line for input-selection.cfg, in
+#   - if retroarch.cfg has the "#include" line for joystick-selection.cfg, in
 #     failure case let the user decide if we can add it to the file.
-#   - if input-selection.cfg exists, create it if doesn't.
+#   - if joystick-selection.cfg exists, create it if doesn't.
 #   - if jslist exists and is executable
 #
 # Globals:
 #   retroarchcfg
-#   inputcfg
+#   jscfg
 #   jslist_exe
 #
 # Arguments:
@@ -170,14 +170,14 @@ function fill_js_list_file() {
 #   1: if fails
 function check_files() {
     # checking if the "#include ..." line is in the retroarch.cfg
-    grep -q "^#include \"$inputcfg\"$" "$retroarchcfg" || {
+    grep -q "^#include \"$jscfg\"$" "$retroarchcfg" || {
         dialog \
           --title "Error" \
           --yesno \
 "Your retroarch.cfg isn't properly configured to work with this method of
 joystick selection. You need to put the following line on your \"$retroarchcfg\"
 (preferably at the beginning):
-\n\n#include \"$inputcfg\"\n\n
+\n\n#include \"$jscfg\"\n\n
 Do you want me to put it at the beginning of the retroarch.cfg now?
 \n(if you choose \"No\", I will stop now)" \
           0 0 >/dev/tty || {
@@ -187,13 +187,13 @@ Do you want me to put it at the beginning of the retroarch.cfg now?
         # Putting the "#include ..." at the beginning line of retroarch.cfg
         sed -i "1i\
 # $(date +%Y-%m-%d): The following line was added to allow joystick selection\n\
-#include \"$inputcfg\"\n" \
+#include \"$jscfg\"\n" \
           "$retroarchcfg" || return 1
     } # end of failed grep
 
-    # if the input-selection.cfg doesn't exist or is empty, create it with
+    # if the joystick-selection.cfg doesn't exist or is empty, create it with
     # default values
-    [[ -s "$inputcfg" ]] || default_input_config "$inputcfg"
+    [[ -s "$jscfg" ]] || default_input_config "$jscfg"
 
     # checking if jslist exists and is executable
     [[ -x "$jslist_exe" ]] || {
@@ -217,7 +217,7 @@ Do you want me to put it at the beginning of the retroarch.cfg now?
 #   js_list_file
 #
 # Arguments:
-#   $1 : NEEDED. The input-selection.cfg file. It's just a
+#   $1 : NEEDED. The joystick-selection.cfg file. It's just a
 #        retroarch.cfg like file with the input_playerN_joypad_index variables.
 #   $2 : OPTIONAL. Its a string with a question to ask in the yesno dialog.
 #        Keep in mind that the "No" answer always exit.
@@ -280,7 +280,7 @@ Player $i is set to \"${js_index_p[$i]}\" (${js_name_p[$i]})"
 # Start a new joystick input selection configuration for players 1-4.
 #
 # Globals:
-#   inputcfg
+#   jscfg
 #   js_list_file
 #
 # Arguments:
@@ -293,16 +293,16 @@ function new_input_config() {
     fill_js_list_file || return 1
 
     local temp_file
-    local temp_inputcfg
+    local temp_jscfg
     local options
     local choice
     local old
     local new
 
     temp_file=$(mktemp temp.XXXX)
-    temp_inputcfg=$(mktemp inputcfg.XXXX)
+    temp_jscfg=$(mktemp jscfg.XXXX)
 
-    cat "$inputcfg" > "$temp_inputcfg"
+    cat "$jscfg" > "$temp_jscfg"
     for i in $(seq 1 4); do
         options="K \"Keep the current configuration for player $i\""
         # The sed below obtain the joystick list with the format
@@ -321,18 +321,18 @@ function new_input_config() {
             old="^input_player${i}_joypad_index.*"
             new="input_player${i}_joypad_index = $choice"
 
-            sed "s/$old/$new/" "$temp_inputcfg" > "$temp_file"
+            sed "s/$old/$new/" "$temp_jscfg" > "$temp_file"
 
-            cat "$temp_file" > "$temp_inputcfg"
+            cat "$temp_file" > "$temp_jscfg"
         fi
     done
 
-    show_input_config "$temp_inputcfg" "Do you accept this config?" || return 1
+    show_input_config "$temp_jscfg" "Do you accept this config?" || return 1
 
     # If the script reaches this point, the user accepted the config
-    cat "$temp_inputcfg" > "$inputcfg"
+    cat "$temp_jscfg" > "$jscfg"
 
-    rm -f "$temp_file" "$temp_inputcfg"
+    rm -f "$temp_file" "$temp_jscfg"
 } # end of new_input_config
 
 
@@ -356,7 +356,7 @@ while true; do
 
     if [[ -n "$choices" ]]; then
         case $choices in
-            1) show_input_config "$inputcfg" \
+            1) show_input_config "$jscfg" \
                  "Choose Yes or No to go to the previous menu." ;;
 
             2) new_input_config ;;
@@ -366,7 +366,7 @@ while true; do
                show_input_config "$temp_file" \
                  "This is the default configuration. Do you accept it?" || continue
 
-               cat "$temp_file" > "$inputcfg"
+               cat "$temp_file" > "$jscfg"
                ;;
 
         esac
