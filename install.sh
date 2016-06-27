@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # install.sh
-#############
+##############
 # A bash script to perform the following tasks:
 # - delete the old "RetroPie-input-selection" scheme if it's installed.
 # - compile jslist.c and put the executable in 
@@ -10,12 +10,22 @@
 #
 
 
+# removing the old input-selection scheme...
+############################################
 rm -f \
   "$HOME/bin/jslist" \
   "$HOME/bin/input_selection.sh" \
-  "$HOME/RetroPie/retropiemenu/input_selection.sh"
+  "$HOME/RetroPie/retropiemenu/input_selection.sh" \
+
+[[ -f "/opt/retropie/configs/all/input-selection.cfg" ]] &&
+  mv -f "/opt/retropie/configs/all/input-selection.cfg" \
+        "/opt/retropie/configs/all/joystick-selection.cfg"
+
+sudo sed -i 's/input-selection/joystick-selection/' \
+  "/opt/retropie/configs/all/retroarch.cfg"
 
 rmdir "$HOME/bin" 2>/dev/null
+############################################
 
 
 echo -n "Compiling \"jslist.c\" and putting it in \"/opt/retropie/supplementary/\"..."
@@ -37,6 +47,12 @@ echo " OK!"
 
 echo -n "Creating a gamelist.xml entry for joystick_selection.sh..."
 gamelistxml="/opt/retropie/configs/all/emulationstation/gamelists/retropie/gamelist.xml"
+
+grep -q "<path>./joystick_selection.sh</path>" "$gamelistxml" && {
+    echo " OK!!"
+    exit 0
+}
+
 gamelist_info='\
 	<game>\
 		<path>.\/joystick_selection.sh<\/path>\
