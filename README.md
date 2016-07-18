@@ -3,11 +3,6 @@ A script to let the user choose the controllers to use for RetroArch players 1-4
 
 This was made for use with RetroPie [https://retropie.org.uk/].
 
-This repository contains the following files:
-- jslist.c
-- joystick_selection.sh (former input_selection.sh)
-- install.sh
-
 
 ## Installation
 It's pretty simple to install. Perform these commands on your RetroPie bash prompt:
@@ -39,6 +34,13 @@ After that you are ready to use it via RetroPie menu in emulationstation.
 
 
 ## Files Description
+
+This repository contains the following files:
+- jslist.c
+- joystick_selection.sh (former input_selection.sh)
+- install.sh
+
+
 ### jslist.c
 It's a small program to list all the joysticks available on the system and their respective index. The output format is:
 `index:Joystick Name`
