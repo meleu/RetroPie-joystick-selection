@@ -49,10 +49,12 @@ After that you are ready to use it via RetroPie menu in emulationstation.
 
 
 **System specific (by index method, some joysticks are set):**
+
 ![config-nes-index](https://cloud.githubusercontent.com/assets/8508804/17637921/35bbca48-60bd-11e6-849a-39e835937c24.png)
 
 
 **System specific (by name method, some joysticks are set):**
+
 ![config-nes](https://cloud.githubusercontent.com/assets/8508804/17637917/35b258aa-60bd-11e6-9e01-c64876afb20d.png)
 
 
