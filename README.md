@@ -77,8 +77,4 @@ These functions were originally part of joystick_selection.sh but some of them a
 
 
 ### install.sh
-A bash script to perform the following tasks:
-- delete the old "RetroPie-input-selection" scheme if it's installed.
-- compile `jslist.c` and put the executable in `/opt/retropie/supplementary/` directory.
-- put `joystick_selection.sh` in `$HOME/RetroPie/retropiemenu/` directory.
-- create a `gamelist.xml` entry for `joystick_selection.sh`.
+There is a description at the comments in beggining of the file.
