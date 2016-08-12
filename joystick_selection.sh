@@ -1,379 +1,332 @@
 #!/usr/bin/env bash
 # joystick_selection.sh
 #######################
-# Show the available joysticks and let the user choose what controller to
-# use for RetroArch Player 1-4.
+# Let the user define which controller to use for RetroArch players 1-4,
+# global and system specific.
 #
-# This program relies on the output of the jslist program to get the
-# available joysticks and their respective indexes.
+# The joystick selection has two methods of work: 1) selection by joystick
+# index and 2) by joystick name.
+# The advantage of the selection by name method is that there is no need
+# to care about the joystick connection order. You can configure your
+# "Generic USB SNES gamepad" to be the player1 no matter what USB port
+# you use. Or, better yet, configure your "Fancy Bluetooth joypad" to be the
+# player1 no matter what was the order it was paired or how many USB pads
+# are connected.
 #
-# Short description of what this script does:
-# - puts at the beginning of $configdir/all/retroarch.cfg an "#include" 
-#   pointing to the file $configdir/all/joystick-selection.cfg
-# - let the user manage the joystick-selection.cfg through dialogs (this file
-#   contains the configs for input_playerN_joypad_index for players 1-4).
-#
-# OBS.: the joystick selection doesn't work if the config_save_on_exit is set
-#       to true, because the retroarch.cfg is overwritten frequently.
+# Dependencies:
+#   jslist:     a small C program that list the available joysticks and
+#               their respective indexes. (it comes from the same github
+#               repository as this script, you probably already have it).
+#   jsfuncs:    some functions to deal with joystick's indexes and names.
+#               They were all here, but some of them are useful for
+#               runcommand-on{start,end}.sh, then I decided to put them
+#               in a different file (it comes from the same github
+#               repo as this script, you probably already have it).
+#   inifuncs:   a set of useful bash functions to manage config files
+#               (it's used here to manipulate retroarch.cfg like files,
+#               if you have RetroPie installed, the you have inifuncs
+#               at /opt/retropie/lib/inifuncs.sh).
+#   runcommand: actually the dependency is the runcommand-onstart feature.
+#               Recently (Aug/2016) this feature was added to the
+#               RetroPie's runcommand script. This is a dependency only to
+#               use the joystick selection by name. If the installed
+#               runcommand doesn't have this feature, the joystick_selection
+#               tool doesn't allow the user turn on the joystick selection by
+#               name method (you can use the "by index" method anyway).
 #
 # TODO:
-#      - implement the same functionality for non-libretro emulators.
-#      - [robustness] alert the user if the Player 1 has no joystick.
-#      - [robustness] verify if the "#include ...joystick-selection.cfg" line
-#        is before any input_playerN_joypad_index in the retroarch.cfg.
+#       - if joystick selection by name is on AND config_save_on_exit is on AND
+#         the user changes the joypads for players1-4 via RGUI, the
+#         joystick-selection will override these changes when launching again.
+#         Needs a simple workaround using runcommand-onend.sh. Easy to solve.
+#       - add a way to select the joystick to __joy2key_dev
 #
-# meleu, 2016/06
+# Possible issues:
+#       - if the joystick name has ':' colon, we can face some problems
+#         (cut field separator for jslist output).
+#       - The RetroPie main developer said that he plans to change the way
+#         iniGet works [https://retropie.org.uk/forum/topic/3099/feature-request-for-inifuncs-sh].
+#         Maybe I'll need to keep a copy of the current inifuncs.sh in
+#         the future...
+#
+# Note for developers: It's better to start reading the code from jsfuncs.sh.
+#
+# meleu, 2016/08
 
-configdir="/opt/retropie/configs"
-
-user="$SUDO_USER"
-[[ -z "$user" ]] && user=$(id -un)
-home="$(eval echo ~$user)"
-
-jslist_exe="/opt/retropie/supplementary/jslist"
-
-js_list_file="/tmp/jslist-$$"
-retroarchcfg="$configdir/all/retroarch.cfg"
-jscfg="$configdir/all/joystick-selection.cfg"
-
-
-# borrowed code from runcommand.sh
-###############################################################################
-function start_joy2key() {
-    # if joy2key.py is installed run it with cursor keys for axis,
-    # and enter + tab for buttons 0 and 1
-    __joy2key_dev=$(ls -1 /dev/input/js* 2>/dev/null | head -n1)
-    if [[ -f "$rootdir/supplementary/runcommand/joy2key.py" && -n "$__joy2key_dev" ]] && ! pgrep -f joy2key.py >/dev/null; then
-        "$rootdir/supplementary/runcommand/joy2key.py" "$__joy2key_dev" 1b5b44 1b5b43 1b5b41 1b5b42 0a 09 &
-        __joy2key_pid=$!
-    fi
-}
-
-function stop_joy2key() {
-    if [[ -n "$__joy2key_pid" ]]; then
-        kill -INT "$__joy2key_pid"
-    fi
-}
-# end of the borrowed code from runcommand.sh
-###############################################################################
-
-
-
-function fatalError() {
-    echo "Error: $1" 1>&2
-    stop_joy2key
-    exit 1
-}
-
-
-function safe_exit() {
-    stop_joy2key
-    exit $1
-}
-
+# get some usefull functions and global variables (the jsfuncs sources inifuncs)
+source "/opt/retropie/supplementary/joystick-selection/jsfuncs.sh"
 
 
 ###############################################################################
-# Puts the default joystick input configuration content in the given
-# file ($1 argument).
-# The default is:
-# input_player1_joypad_index = "0"
-# input_player2_joypad_index = "1"
-# input_player3_joypad_index = "2"
-# input_player4_joypad_index = "3"
+# Toggle the joystick selection method (by name or by index).
+#
+# If toggle from "by name" to "by index", just set the
+# "joystick_selection_by_name" to "false" in global joystick-selection.cfg.
+#
+# If toggle from "by index" to "by name", make all existent system's
+# joystick-selection.cfg match the current config from the
+# respective retroarch.cfg.
 #
 # Globals:
-#   None
-#
-# Arguments:
-#   $1 : NEEDED. The file where the default config will be put.
-#
-# Returns:
-#   1: if fails.
-function default_input_config() {
-    [[ "$1" ]] || fatalError "default_input_config: missing argument!"
-
-    local temp_jscfg
-    temp_jscfg="$1"
-
-    cat << _EOF_ > "$temp_jscfg"
-# This file is used to choose which controller to use for each player.
-input_player1_joypad_index = "0"
-input_player2_joypad_index = "1"
-input_player3_joypad_index = "2"
-input_player4_joypad_index = "3"
-_EOF_
-    if [ "$?" -ne 0 ]; then
-        dialog --title "Error" \
-          --msgbox "Unable to create a default configuration" \
-          20 60 >/dev/tty
-        return 1
-    fi
-
-    chown $user.$user "$temp_jscfg"
-}
-
-
-
-###############################################################################
-# Fills the js_list_file with the available joysticks and their indexes.
-#
-# Globals:
-#   jslist_exe
-#   js_list_file
+#   BYNAME
+#   byname_msg
 #
 # Arguments:
 #   None
 #
 # Returns:
-#   1: if no joystick found.
-function fill_js_list_file() {
-    local temp_file
-    temp_file=$(mktemp deleteme.XXXX)
-
-    # the jslist returns a non-zero value if it doesn't find any joystick
-    $jslist_exe > "$temp_file" || {
-        dialog --title "Error" --msgbox "No joystick found. :(" 20 60 >/dev/tty
-        rm -f "$temp_file"
-        return 1
-    }
-
-    # This obscure command searches for duplicated joystick names and puts
-    # a sequential number at the end of the repeated ones
-    # credit goes to fedorqui (http://stackoverflow.com/users/1983854/fedorqui)
-    awk -F: 'FNR==NR {count[$2]++; next}
-             count[$2]>1 {$0=$0 OFS "#"++times[$2]}
-             1' "$temp_file" "$temp_file" > "$js_list_file"
-
-    # No need for this file anymore
-    rm -f "$temp_file"
-} # end of fill_js_list_file
-
-
-
-###############################################################################
-# Checking the following:
-#   - if retroarch.cfg has the "#include" line for joystick-selection.cfg, in
-#     failure case let the user decide if we can add it to the file.
-#   - if joystick-selection.cfg exists, create it if doesn't.
-#   - if jslist exists and is executable
-#
-# Globals:
-#   retroarchcfg
-#   jscfg
-#   jslist_exe
-#
-# Arguments:
-#   None
-#
-# Returns:
-#   1: if fails
-function check_files() {
-    # checking if the "#include ..." line is in the retroarch.cfg
-    grep -q "^#include \"$jscfg\"$" "$retroarchcfg" || {
+#   0
+function toggle_byname() {
+    if [[ "$BYNAME" = "ON" ]]; then
         dialog \
-          --title "Error" \
-          --yesno \
-"Your retroarch.cfg isn't properly configured to work with this method of
-joystick selection. You need to put the following line on your \"$retroarchcfg\"
-(preferably at the beginning):
-\n\n#include \"$jscfg\"\n\n
-Do you want me to put it at the beginning of the retroarch.cfg now?
-\n(if you choose \"No\", I will stop now)" \
-          0 0 >/dev/tty || {
-            return 1;
-        }
+          --title "Toggle \"selection by name\" capability" \
+          --yesno "Are you sure you want to turn OFF the joystick selection by name method?" \
+          0 0 >/dev/tty || return 1
 
-        # Putting the "#include ..." at the beginning line of retroarch.cfg
-        sed -i "1i\
-# $(date +%Y-%m-%d): The following line was added to allow joystick selection\n\
-#include \"$jscfg\"\n" \
-          "$retroarchcfg" || return 1
-    } # end of failed grep
+        iniSet "joystick_selection_by_name" "false" "$global_jscfg"
+        BYNAME="OFF"
 
-    # if the joystick-selection.cfg doesn't exist or is empty, create it with
-    # default values
-    [[ -s "$jscfg" ]] || default_input_config "$jscfg"
+    else
+        check_byname_is_ok || return 1
 
-    # checking if jslist exists and is executable
-    [[ -x "$jslist_exe" ]] || {
-        dialog --title "Error" \
-          --msgbox "\"$jslist_exe\" not found or isn't executable!" \
-          20 60 >/dev/tty
-        return 1
-    } # end of failed jslist_exe
+        dialog \
+          --title "Toggle \"selection by name\" capability" \
+          --yesno "If you turn ON the joystick selection by name method, probably your current joystick selection will be lost (but you can easily reconfigure it using this tool).\n\nAre you sure you want to turn ON the joystick selection by name method?" \
+          0 0 >/dev/tty || return 1
 
-} # end of check_files
+        BYNAME="ON"
+
+        local file
+        local system
+
+        # get all the systems *joypad_index configs and convert to an
+        # equivalent joystick-selection.cfg
+        for file in $(find /opt/retropie/configs/ -name retroarch.cfg 2>/dev/null); do
+            if grep -q "^[[:space:]#]*input_player[1-4]_joypad_index[[:space:]]*=" "$file"; then
+                system="$(basename $(dirname "$file"))"
+                retroarch_to_js_cfg "$system"
+            fi
+        done
+    fi
+    byname_msg="Selection by name is: [$BYNAME]\n\n"
+} # end of toggle_byname()
+
+
+
+# Choose between global config, system specific config, toggle byname
+function main_menu() {
+    while true; do
+        cmd=(dialog \
+             --title " Joystick Selection Main Menu " \
+             --menu "${byname_msg}This is a tool to let you choose which controller to use for RetroArch players 1-4" 19 80 12)
+        options=(
+            1 "Global joystick selection."
+            2 "System specific joystick selection."
+            3 "Toggle the joystick selection \"by-name\" method."
+        )
+        choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+    
+        if [[ -n "$choice" ]]; then
+            case $choice in
+                1)  system_js_select_menu "all"
+                ;;
+
+                2)  systems_menu
+                ;;
+
+                3)  toggle_byname
+                ;;
+            esac
+        else
+            break
+        fi
+    done
+} # end of main_menu()
 
 
 
 ###############################################################################
-# Show the input config with the joystick names, and let the user decide if
-# he/she wants to continue.
-# The caller of this function must deal with the user decision. It returns
-# 1 if the user choose "No", and 0 if the user choose "Yes".
+# Show a menu to let the user configure the input for a given system.
+# At the end of this function, if the BYNAME flag is ON, the retroarch.cfg
+# system file will match the configs in joystick-selection.cfg system file.
 #
 # Globals:
 #   js_list_file
 #
 # Arguments:
-#   $1 : NEEDED. The joystick-selection.cfg file. It's just a
-#        retroarch.cfg like file with the input_playerN_joypad_index variables.
-#   $2 : OPTIONAL. Its a string with a question to ask in the yesno dialog.
-#        Keep in mind that the "No" answer always exit.
+#   $1 : The system to be configured
 #
 # Returns:
-#   -1: if it fails
-#    1: if the user choose No in the --yesno dialog box.
-#    0: if the user choose Yes in the --yesno dialog box.
-function show_input_config() {
-    [[ -f "$1" ]] || fatalError "show_input_config: invalid argument!"
+#   0
+function system_js_select_menu() {
+    [[ "$1" ]] || fatalError "js_select: missing argument: \"system\""
 
-    fill_js_list_file
+    fill_jslist_file
 
-    local cfg_file
-    cfg_file="$1"
+    local system="$1"
+    local js_name_p=()
 
-    local question
-    question=${2:-"Would you like to continue?"}
+    local retroarchcfg="$configdir/$system/retroarch.cfg"
+    local jscfg="$configdir/$system/joystick-selection.cfg"
 
-    local current_config_string
-
-    for i in $(seq 1 4); do
-        # the command sequence below takes the number after the = sign,
-        # deleting the "double quotes" if they exist.
-        js_index_p[$i]=$(
-          grep -m 1 "^input_player${i}_joypad_index" "$cfg_file" \
-          | cut -d= -f2 \
-          | sed 's/ *"\?\([0-9]\)*"\?.*/\1/' \
-        )
-
-        # getting the joystick names
-        if [[ -z "${js_index_p[$i]}" ]]; then
-            js_name_p[$i]="** NO JOYSTICK! **"
-        else 
-            js_name_p[$i]=$(
-              grep "^${js_index_p[$i]}" "$js_list_file" \
-              | cut -d: -f2
-            )
-
-            [[ -z "${js_name_p[$i]}" ]] &&
-                js_name_p[$i]="** NO JOYSTICK! **"
+    while true; do
+        # the 'if' outside the 'for' is because a performance reason
+        if [[ "$BYNAME" = "ON" ]]; then
+            for i in 1 2 3 4; do
+                iniGet "input_player${i}_joypad_index" "$jscfg"
+                if [[ -z "$ini_value" ]]; then
+                    js_name_p[$i]="** UNSET **"
+                else
+                    js_name_p[$i]="$ini_value $(js_is_connected "$ini_value")"
+                fi
+            done
+        else
+            for i in 1 2 3 4; do
+                iniGet "input_player${i}_joypad_index" "$retroarchcfg"
+                if [[ -z "$ini_value" ]]; then
+                    js_name_p[$i]="** UNSET **"
+                else
+                    js_name_p[$i]="$ini_value:$(js_index2name "$ini_value")"
+                fi
+            done
         fi
 
-        current_config_string="$current_config_string\n\
-Player $i is set to \"${js_index_p[$i]}\" (${js_name_p[$i]})"
-
+        cmd=(dialog \
+             --title " Joystick Selection for \"$system\" " \
+             --menu "${byname_msg}OBS: UNSET/NOT CONNECTED joysticks are set to RetroArch defaults when launching a game.\n\nChoose the player you want to configure:" \
+             19 80 12
+        )
+        options=(
+            1 "${js_name_p[1]}"
+            2 "${js_name_p[2]}"
+            3 "${js_name_p[3]}"
+            4 "${js_name_p[4]}"
+        )
+        choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+    
+        if [[ -n "$choice" ]]; then
+            player_js_select_menu "$choice" "$system"
+        else
+            break
+        fi
     done
 
-    dialog \
-      --title "Joystick selection" \
-      --yesno "$current_config_string\n\n$question" \
-      0 0 >/dev/tty || return 1
+    # making retroarch.cfg match the configs in joystick-selection.cfg
+    # to avoid user confusion when looking at the files.
+    js_to_retroarchcfg "$system"
 
-    return 0
-} # end of show_input_config
+    # if the system is not "all", go back to the systems_menu
+    [[ "$system" != "all" ]] && systems_menu
+} # end of system_js_select_menu()
 
 
 
 ###############################################################################
-# Start a new joystick input selection configuration for players 1-4.
+# Show the available joysticks and let the user choose which one to use
+# for the player given as a parameter.
 #
 # Globals:
-#   jscfg
-#   js_list_file
+#   None
+#
+# Arguments:
+#   $1  an integer [1-4] that represents the player.
+#   $2  the system to configure
+#
+# Returns:
+#   0
+function player_js_select_menu() {
+    [[ "$1" =~ ^[1-4]$ ]] || fatalError "player_js_select_menu: invalid argument!"
+    [[ "$2" ]] && [[ -d "$configdir/$2" ]] || fatalError "player_js_select_menu: arg2 must be a valid system!"
+
+    local i="$1"
+    local jscfg="$configdir/$2/joystick-selection.cfg"
+    local retroarchcfg="$configdir/$2/retroarch.cfg"
+    
+    fill_jslist_file
+
+    options="U \"Unset\""
+    # The sed below obtain the joystick list with the format
+    # index "Joystick Name"
+    # to use as dialog menu options
+    options+=" $(sed 's/:\(.*\)/ "\1"/' "$jslist_file")"
+
+    choice=$(
+        echo "$options" \
+        | xargs dialog \
+            --title " Joystick Selection for \"$system\" " \
+            --menu "${byname_msg}Choose the joystick for player$i" \
+            19 80 12 2>&1 >/dev/tty
+    )
+
+
+    if [[ -n "$choice" ]]; then
+        case $choice in
+            U)
+                iniUnset "input_player${i}_joypad_index" "$((i-1))" "$jscfg"
+                iniUnset "input_player${i}_joypad_index" "$((i-1))" "$retroarchcfg"
+            ;;
+
+            *)
+                if [[ "$BYNAME" = "ON" ]]; then
+                    iniSet "input_player${i}_joypad_index" "$(js_index2name "$choice")" "$jscfg"
+                else
+                    iniSet "input_player${i}_joypad_index" "$choice" "$retroarchcfg"
+                fi
+            ;;
+        esac
+    fi
+} # end of player_js_select_menu()
+
+
+
+###############################################################################
+# Show the available systems to configure.
+#
+# Globals:
+#   None
 #
 # Arguments:
 #   None
 #
 # Returns:
-#   1: if fails.
-#   0: if the user don't want to change the config
-function new_input_config() {
-    fill_js_list_file || return 1
+#   0
+function systems_menu() {
+    local file
+    local system_list
+    local system
 
-    local temp_file
-    local temp_jscfg
-    local options
-    local choice
-    local old
-    local new
-
-    temp_file=$(mktemp temp.XXXX)
-    temp_jscfg=$(mktemp jscfg.XXXX)
-
-    cat "$jscfg" > "$temp_jscfg"
-    for i in $(seq 1 4); do
-        options="K \"Keep the current configuration for player $i\""
-        # The sed below obtain the joystick list with the format
-        # index "Joystick Name"
-        # to use as dialog menu options
-        options="$options $(sed 's/:\(.*\)/ "\1"/' $js_list_file)"
-        choice=$(echo "$options" \
-                   | xargs dialog \
-                       --title "Player $i joystick selection" \
-                       --menu "Which controller do you want to use for Player $i?" \
-                       0 0 0 2>&1 >/dev/tty
-        )
-
-        # if the user choose K or Cancel, it'll keep the current config
-        if [ -n "$choice" -a "$choice" != "K" ]; then
-            old="^input_player${i}_joypad_index.*"
-            new="input_player${i}_joypad_index = $choice"
-
-            sed "s/$old/$new/" "$temp_jscfg" > "$temp_file"
-
-            cat "$temp_file" > "$temp_jscfg"
-        fi
+    for file in $(find /opt/retropie/configs/ -name retroarch.cfg 2>/dev/null); do
+        system_list+="$(basename $(dirname "$file"))\n"
     done
+    system_list=$(echo -e "$system_list" | grep -v "^all$" | sort | nl )
 
-    show_input_config "$temp_jscfg" "Do you accept this config?" || return 1
+    cmd=(dialog \
+         --title "Joystick Selection" \
+         --menu "What system do you want to configure?" 25 80 20)
+    options=( $system_list )
+    choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty) || return 1
 
-    # If the script reaches this point, the user accepted the config
-    cat "$temp_jscfg" > "$jscfg"
+    system=$(echo -e "$system_list" | grep "^[[:blank:]]*$choice[[:blank:]]*" | cut -f2)
 
-    rm -f "$temp_file" "$temp_jscfg"
-} # end of new_input_config
-
+    system_js_select_menu "$system"
+}
 
 
-###############################################################################
-# The script starts here.
+
+# STARTING POINT ##############################################################
+
+# checking if jslist exists and is executable
+[[ -x "$jslist_exe" ]] || {
+    dialog --title "Error" \
+      --msgbox "\"$jslist_exe\" not found or isn't executable!" \
+      20 60 >/dev/tty
+    safe_exit 1
+}
+
+get_configs
 
 start_joy2key
 
-check_files || safe_exit 1
-
-while true; do
-    cmd=(dialog \
-         --menu "Joystick selection for RetroArch players 1-4." 18 80 12)
-    options=(
-        1 "Show current joystick selection for players 1-4."
-        2 "Start a new joystick selection for players 1-4."
-        3 "Restore the default settings."
-    )
-    choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
-
-    if [[ -n "$choices" ]]; then
-        case $choices in
-            1) show_input_config "$jscfg" \
-                 "Choose Yes or No to go to the previous menu." ;;
-
-            2) new_input_config ;;
-
-            3) temp_file=$(mktemp input-cfg.XXXX)
-               default_input_config "$temp_file"
-               show_input_config "$temp_file" \
-                 "This is the default configuration. Do you accept it?" || continue
-
-               cat "$temp_file" > "$jscfg"
-               ;;
-
-        esac
-    else
-        rm -f "$js_list_file" "$temp_file"
-        break
-    fi
-done
+main_menu
 
 safe_exit 0
