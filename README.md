@@ -21,6 +21,41 @@ bash install.sh
 After that you are ready to use it via RetroPie menu in emulationstation.
 
 
+## Screenshots
+
+**Main menu:**
+
+![main-meu](https://cloud.githubusercontent.com/assets/8508804/17637919/35b71b06-60bd-11e6-91ba-c598aaee806c.png)
+
+
+**Global configuration (with no configs):**
+
+![config-all-unset](https://cloud.githubusercontent.com/assets/8508804/17637916/35b1c9e4-60bd-11e6-8c58-456c59bbfed0.png)
+
+
+**Global configuration (by index method, all 4 joysticks are set):**
+
+![config-all-index](https://cloud.githubusercontent.com/assets/8508804/17637918/35b2e392-60bd-11e6-996b-2a4db69be500.png)
+
+
+**Global configuration (by name method, all 4 joysticks are set):**
+
+![config-all-configured](https://cloud.githubusercontent.com/assets/8508804/17637912/2d349e72-60bd-11e6-80e5-38460a0b2dd7.png)
+
+
+**Systems menu (I have just a few of them installed):**
+
+![system-menu](https://cloud.githubusercontent.com/assets/8508804/17637920/35bb4334-60bd-11e6-8926-669ad5b08fa8.png)
+
+
+**System specific (by index method, some joysticks are set):**
+![config-nes-index](https://cloud.githubusercontent.com/assets/8508804/17637921/35bbca48-60bd-11e6-849a-39e835937c24.png)
+
+
+**System specific (by name method, some joysticks are set):**
+![config-nes](https://cloud.githubusercontent.com/assets/8508804/17637917/35b258aa-60bd-11e6-9e01-c64876afb20d.png)
+
+
 ## Known Issues
 - If you are using joysticks with equal names, then, yes, the connection order matters.
 - **[This issue doesn't happen if you use the joystick selection by name method]** If the joystick list order changes (adding/removing devices), your configuration changes too. So you have to run `joystick_selection.sh` again.
