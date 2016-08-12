@@ -306,7 +306,7 @@ function systems_menu() {
     options=( $system_list )
     choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty) || return 1
 
-    system=$(echo -e "$system_list" | grep "^[[:blank:]]*$choice[[:blank:]]*" | cut -f2)
+    system=$(echo -e "$system_list" | grep "^[[:blank:]]*$choice[[:blank:]]\+" | cut -f2)
 
     system_js_select_menu "$system"
 }
