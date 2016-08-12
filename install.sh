@@ -18,7 +18,6 @@
     exit 1
 }
 
-
 # removing the old selection scheme...
 ############################################
 sudo rm -f \
