@@ -10,7 +10,6 @@
 # - create a gamelist.xml entry for joystick_selection.sh
 #
 
-
 # checking paths
 [[ -d "/opt/retropie/" ]] && [[ -d "$HOME/RetroPie/retropiemenu/" ]] || {
     echo "*** Error: it seems that you installed RetroPie in some unusual directories." >&2
@@ -20,16 +19,15 @@
 }
 
 
-
-
 # removing the old selection scheme...
 ############################################
-rm -f \
+sudo rm -f \
   "$HOME/bin/jslist" \
   "$HOME/bin/input_selection.sh" \
   "$HOME/RetroPie/retropiemenu/input_selection.sh" \
   "/opt/retropie/configs/all/input-selection.cfg" \
-  "/opt/retropie/configs/all/joystick-selection.cfg"
+  "/opt/retropie/configs/all/joystick-selection.cfg" \
+  "/opt/retropie/supplementary/jslist"
 
 sudo sed -i '
     /^#.*The following line was added to allow joystick selection/d
