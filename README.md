@@ -58,6 +58,12 @@ After that you are ready to use it via RetroPie menu in emulationstation.
 ![config-nes](https://cloud.githubusercontent.com/assets/8508804/17637917/35b258aa-60bd-11e6-9e01-c64876afb20d.png)
 
 
+**Joystick selection screen:**
+
+![joy-select](https://cloud.githubusercontent.com/assets/8508804/17638622/b1f454c8-60c1-11e6-9e10-0fc9debaadcd.png)
+
+
+
 ## Known Issues
 - If you are using joysticks with equal names, then, yes, the connection order matters.
 - **[This issue doesn't happen if you use the joystick selection by name method]** If the joystick list order changes (adding/removing devices), your configuration changes too. So you have to run `joystick_selection.sh` again.
