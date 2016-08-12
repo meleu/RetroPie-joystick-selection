@@ -9,6 +9,8 @@
 # Most of the functions have comments about what it does.
 #
 
+user="$SUDO_USER"
+[[ -z "$user" ]] && user=$(id -un)
 
 readonly rootdir="/opt/retropie"
 readonly configdir="$rootdir/configs"
@@ -25,7 +27,6 @@ source "$rootdir/lib/inifuncs.sh"
 # different from "ON" means "off"
 BYNAME="OFF"
 byname_msg=
-
 
 
 # borrowed code from runcommand.sh
@@ -133,6 +134,7 @@ js_to_retroarchcfg all && echo "joystick indexes for \"all\" was configured" >&2
 echo "--- end of joystick-selection log" >&2
 _EoF_
         sudo mv "/tmp/jsonstart.tmp" "$jsonstart"
+        sudo chown "$user"."$user"   "$jsonstart"
         check_byname_is_ok
         return $?
     fi
@@ -364,6 +366,7 @@ function js_to_retroarchcfg() {
 function retroarch_to_js_cfg() {
     [[ "$1" ]] && [[ -d "$configdir/$1" ]] || fatalError "retroarch_to_js_cfg: the argument must be a valid system!"
 
+    local temp=$(mktemp /tmp/temp.XXX)
     local jscfg="$configdir/$1/joystick-selection.cfg"
     local retroarchcfg="$configdir/$1/retroarch.cfg"
     local jsname=
@@ -372,7 +375,7 @@ function retroarch_to_js_cfg() {
 
     fill_jslist_file
 
-    cat > "$jscfg" << _EoF_ 
+    cat > "$temp" << _EoF_ 
 # This file was created by the joystick-selection tool.
 # It's recommended to NOT edit it manually.
 # The format is pretty simmilar to a retroarch.cfg file, but it contains only
@@ -381,6 +384,8 @@ function retroarch_to_js_cfg() {
 # input_playerN_joypad_index = "joystick name"
 # If "joystick name" is an integer, then the real joystick index is used.
 _EoF_
+    sudo mv "$temp" "$jscfg"
+    sudo chown "$user"."$user" "$jscfg"
 
     if [[ "$jscfg" = "$global_jscfg" ]]; then
         if [[ "$BYNAME" = "ON" ]]; then
