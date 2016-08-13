@@ -73,7 +73,7 @@ After that you are ready to use it via RetroPie menu in emulationstation.
 
 ## Changelog
 
-**2016-08-12**: added the "joystick selection by name" feature!
+**2016-08-12**: added 1) system specific configuration; 2) the "joystick selection by name" feature!
 
 **2016-06-26**: now the install.sh creates a `gamelist.xml` entry for `joystick_selection.sh`.
 
