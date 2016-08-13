@@ -91,7 +91,7 @@ function toggle_byname() {
 
         dialog \
           --title "Toggle \"selection by name\" capability" \
-          --yesno "If you turn ON the joystick selection by name method, probably your current joystick selection will be lost (but you can easily reconfigure it using this tool).\n\nAre you sure you want to turn ON the joystick selection by name method?" \
+          --yesno "If you turn ON the joystick selection by name method, probably your current joystick selection will be lost (the disconnected ones). But you can easily reconfigure it using this tool.\n\nAre you sure you want to turn ON the joystick selection by name method?" \
           0 0 >/dev/tty || return 1
 
         BYNAME="ON"
