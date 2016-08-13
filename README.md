@@ -13,7 +13,7 @@ It was made for use with RetroPie only [https://retropie.org.uk/].
 ## Installation
 It's pretty simple to install. Perform these commands on your RetroPie bash prompt:
 ```
-git clone https://github.com/meleu/RetroPie-joystick-selection
+git clone -b selectionbyname https://github.com/meleu/RetroPie-joystick-selection
 cd RetroPie-joystick-selection
 bash install.sh
 ```
