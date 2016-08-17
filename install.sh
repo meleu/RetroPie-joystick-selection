@@ -66,10 +66,11 @@ echo " OK!"
 
 
 echo -n "Creating a gamelist.xml entry for joystick_selection.sh..."
-cp "/opt/retropie/configs/all/emulationstation/gamelists/retropie/gamelist.xml" \
-  "$HOME/RetroPie/retropiemenu/gamelist.xml"
-
 gamelistxml="$HOME/RetroPie/retropiemenu/gamelist.xml"
+[[ -f "$gamelistxml" ]] || {
+    cp "/opt/retropie/configs/all/emulationstation/gamelists/retropie/gamelist.xml" \
+      "$gamelistxml"
+}
 
 grep -q "<path>./joystick_selection.sh</path>" "$gamelistxml" && {
     echo " OK!!"
