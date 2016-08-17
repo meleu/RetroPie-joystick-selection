@@ -33,6 +33,11 @@ After that you are ready to use it via RetroPie menu in emulationstation.
 ![config-all-unset](https://cloud.githubusercontent.com/assets/8508804/17637916/35b1c9e4-60bd-11e6-8c58-456c59bbfed0.png)
 
 
+**Joystick selection screen:**
+
+![joy-select](https://cloud.githubusercontent.com/assets/8508804/17638622/b1f454c8-60c1-11e6-9e10-0fc9debaadcd.png)
+
+
 **Global configuration (by index method, all 4 joysticks are set):**
 
 ![config-all-index](https://cloud.githubusercontent.com/assets/8508804/17637918/35b2e392-60bd-11e6-996b-2a4db69be500.png)
@@ -56,11 +61,6 @@ After that you are ready to use it via RetroPie menu in emulationstation.
 **System specific (by name method, some joysticks are set):**
 
 ![config-nes](https://cloud.githubusercontent.com/assets/8508804/17637917/35b258aa-60bd-11e6-9e01-c64876afb20d.png)
-
-
-**Joystick selection screen:**
-
-![joy-select](https://cloud.githubusercontent.com/assets/8508804/17638622/b1f454c8-60c1-11e6-9e10-0fc9debaadcd.png)
 
 
 
