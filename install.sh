@@ -10,6 +10,7 @@
 # - create a gamelist.xml entry for joystick_selection.sh
 #
 
+
 # checking paths
 [[ -d "/opt/retropie/" ]] && [[ -d "$HOME/RetroPie/retropiemenu/" ]] || {
     echo "*** Error: it seems that you installed RetroPie in some unusual directories." >&2
@@ -17,6 +18,7 @@
     echo "Aborting..."
     exit 1
 }
+
 
 # removing the old selection scheme...
 ############################################
@@ -64,7 +66,10 @@ echo " OK!"
 
 
 echo -n "Creating a gamelist.xml entry for joystick_selection.sh..."
-gamelistxml="/opt/retropie/configs/all/emulationstation/gamelists/retropie/gamelist.xml"
+cp "/opt/retropie/configs/all/emulationstation/gamelists/retropie/gamelist.xml" \
+  "$HOME/RetroPie/retropiemenu/gamelist.xml"
+
+gamelistxml="$HOME/RetroPie/retropiemenu/gamelist.xml"
 
 grep -q "<path>./joystick_selection.sh</path>" "$gamelistxml" && {
     echo " OK!!"

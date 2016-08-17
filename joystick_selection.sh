@@ -91,7 +91,7 @@ function toggle_byname() {
 
         dialog \
           --title "Toggle \"selection by name\" capability" \
-          --yesno "If you turn ON the joystick selection by name method, probably your current joystick selection will be lost (the disconnected ones). But you can easily reconfigure it using this tool.\n\nAre you sure you want to turn ON the joystick selection by name method?" \
+          --yesno "If you turn ON the joystick selection by name method, probably your current joystick selection will be lost (but you can easily reconfigure it using this tool).\n\nAre you sure you want to turn ON the joystick selection by name method?" \
           0 0 >/dev/tty || return 1
 
         BYNAME="ON"
@@ -101,10 +101,12 @@ function toggle_byname() {
 
         # get all the systems *joypad_index configs and convert to an
         # equivalent joystick-selection.cfg
-        for file in $(find /opt/retropie/configs/ -name retroarch.cfg 2>/dev/null); do
+        for file in $(find "$configdir" -name retroarch.cfg 2>/dev/null); do
             if grep -q "^[[:space:]#]*input_player[1-4]_joypad_index[[:space:]]*=" "$file"; then
-                system="$(basename $(dirname "$file"))"
-                retroarch_to_js_cfg "$system"
+                system=${file%/*}
+                system=${system//$configdir\//}
+                retroarch_to_jscfg "$system"
+read -p "retroarch_to_jscfg $system" debug
             fi
         done
     fi
@@ -295,8 +297,10 @@ function systems_menu() {
     local system_list
     local system
 
-    for file in $(find /opt/retropie/configs/ -name retroarch.cfg 2>/dev/null); do
-        system_list+="$(basename $(dirname "$file"))\n"
+    for file in $(find "$configdir" -name retroarch.cfg 2>/dev/null); do
+        system=${file%/*}
+        system=${system//$configdir\//}
+        system_list+="$system\n"
     done
     system_list=$(echo -e "$system_list" | grep -v "^all$" | sort | nl )
 

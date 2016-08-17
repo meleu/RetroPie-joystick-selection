@@ -363,15 +363,15 @@ function js_to_retroarchcfg() {
 #
 # Returns:
 #   0
-function retroarch_to_js_cfg() {
-    [[ "$1" ]] && [[ -d "$configdir/$1" ]] || fatalError "retroarch_to_js_cfg: the argument must be a valid system!"
+function retroarch_to_jscfg() {
+    [[ "$1" ]] && [[ -d "$configdir/$1" ]] || fatalError "retroarch_to_jscfg: the argument must be a valid system!"
 
     local temp=$(mktemp /tmp/temp.XXX)
     local jscfg="$configdir/$1/joystick-selection.cfg"
     local retroarchcfg="$configdir/$1/retroarch.cfg"
     local jsname=
 
-    [[ -f "$retroarchcfg" ]] || fatalError "retroarch_to_js_cfg: \"$retroarchcfg\" not found!"
+    [[ -f "$retroarchcfg" ]] || fatalError "retroarch_to_jscfg: \"$retroarchcfg\" not found!"
 
     fill_jslist_file
 
@@ -408,6 +408,6 @@ _EoF_
             fi
         fi
     done
-} # end of retroarch_to_js_cfg()
+} # end of retroarch_to_jscfg()
 
 
