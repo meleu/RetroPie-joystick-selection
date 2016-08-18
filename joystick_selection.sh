@@ -85,7 +85,6 @@ function toggle_byname() {
 
         iniSet "joystick_selection_by_name" "false" "$global_jscfg"
         BYNAME="OFF"
-
     else
         check_byname_is_ok || return 1
 
@@ -94,11 +93,11 @@ function toggle_byname() {
           --yesno "If you turn ON the joystick selection by name method, probably your current joystick selection will be lost (but you can easily reconfigure it using this tool).\n\nAre you sure you want to turn ON the joystick selection by name method?" \
           0 0 >/dev/tty || return 1
 
-        BYNAME="ON"
+        dialog --title "Joystick Selection" --infobox "Please wait..." 0 0
 
+        BYNAME="ON"
         local file
         local system
-
         # get all the systems *joypad_index configs and convert to an
         # equivalent joystick-selection.cfg
         for file in $(find "$configdir" -name retroarch.cfg 2>/dev/null); do
@@ -106,7 +105,6 @@ function toggle_byname() {
                 system=${file%/*}
                 system=${system//$configdir\//}
                 retroarch_to_jscfg "$system"
-read -p "retroarch_to_jscfg $system" debug
             fi
         done
     fi
@@ -172,7 +170,7 @@ function system_js_select_menu() {
     local jscfg="$configdir/$system/joystick-selection.cfg"
 
     while true; do
-        # the 'if' outside the 'for' is because a performance reason
+        # the 'if' outside the 'for' is for a performance reason
         if [[ "$BYNAME" = "ON" ]]; then
             for i in 1 2 3 4; do
                 iniGet "input_player${i}_joypad_index" "$jscfg"
@@ -260,7 +258,6 @@ function player_js_select_menu() {
             19 80 12 2>&1 >/dev/tty
     )
 
-
     if [[ -n "$choice" ]]; then
         case $choice in
             U)
@@ -318,6 +315,10 @@ function systems_menu() {
 
 
 # STARTING POINT ##############################################################
+
+# I've noticed a little delay to show the first main menu when running
+# on a raspi1. This infobox is just to say that something is happenning.
+dialog --title 'Joystick Selection' --infobox 'Please wait...' 0 0
 
 # checking if jslist exists and is executable
 [[ -x "$jslist_exe" ]] || {
