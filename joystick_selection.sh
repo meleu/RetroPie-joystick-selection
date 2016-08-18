@@ -106,7 +106,6 @@ function toggle_byname() {
                 system=${file%/*}
                 system=${system//$configdir\//}
                 retroarch_to_jscfg "$system"
-read -p "retroarch_to_jscfg $system" debug
             fi
         done
     fi
