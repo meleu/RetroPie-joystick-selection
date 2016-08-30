@@ -155,10 +155,7 @@ function get_configs() {
 
     iniGet joystick_selection_by_name "$global_jscfg"
 
-    # this is just to ignore case
-    local value=$(echo "$ini_value" | tr A-Z a-z)
-
-    if [[ "$value" = "true" ]]; then
+    if [[ "$ini_value" =~ ^[Tt][Rr][Uu][Ee]$ ]]; then
         if check_byname_is_ok; then
             BYNAME="ON"
         else

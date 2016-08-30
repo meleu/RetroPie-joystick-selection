@@ -90,3 +90,8 @@ sudo sed -i.bak "/<\/gameList>/ s/.*/${gamelist_info}\n&/" "$gamelistxml" || {
     exit 1
 }
 echo " OK!"
+
+# ensuring that the /opt/retropie/configs/all dir is owned by the user
+user="$SUDO_USER"
+[[ -z "$user" ]] && user=$(id -un)
+sudo chown $user.$user /opt/retropie/configs/all
