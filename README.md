@@ -18,7 +18,7 @@ cd RetroPie-joystick-selection
 bash install.sh
 ```
 
-After that you are ready to use it via RetroPie menu in emulationstation.
+**After that you are ready to use it via RetroPie menu in emulationstation.**
 
 
 ## Screenshots
