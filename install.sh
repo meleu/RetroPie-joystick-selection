@@ -64,9 +64,9 @@ cp joystick_selection.sh "$HOME/RetroPie/retropiemenu/joystick_selection.sh" || 
 }
 echo " OK!"
 
-echo -n "Putting \"icon.png\" in \"$home/RetroPie/retropiemenu/icons\"..."
-cp icon.png "$home/RetroPie/retropiemenu/icons/joystick_selection.png" || {
-    echo -e "\nUnable to put \"icon.png\" in \"$home/RetroPie/retropiemenu/icons\". Aborting."
+echo -n "Putting \"icon.png\" in \"$HOME/RetroPie/retropiemenu/icons\"..."
+cp icon.png "$HOME/RetroPie/retropiemenu/icons/joystick_selection.png" || {
+    echo -e "\nUnable to put \"icon.png\" in \"$HOME/RetroPie/retropiemenu/icons\". Aborting."
     exit 1
 }
 echo " OK!"
