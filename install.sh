@@ -64,6 +64,12 @@ cp joystick_selection.sh "$HOME/RetroPie/retropiemenu/joystick_selection.sh" || 
 }
 echo " OK!"
 
+echo -n "Putting \"icon.png\" in \"$HOME/RetroPie/retropiemenu/icons\"..."
+cp icon.png "$HOME/RetroPie/retropiemenu/icons/joystick_selection.png" || {
+    echo -e "\nUnable to put \"icon.png\" in \"$HOME/RetroPie/retropiemenu/icons\". Aborting."
+    exit 1
+}
+echo " OK!"
 
 echo -n "Creating a gamelist.xml entry for joystick_selection.sh..."
 gamelistxml="$HOME/RetroPie/retropiemenu/gamelist.xml"
@@ -82,7 +88,7 @@ gamelist_info='\
 		<path>.\/joystick_selection.sh<\/path>\
 		<name>Joystick Selection<\/name>\
 		<desc>Select which joystick to use for RetroArch players 1-4 (global or system specific).<\/desc>\
-		<image><\/image>\
+		<image>.\/icons\/joystick_selection.png<\/image>\
 	<\/game>'
 
 sudo sed -i.bak "/<\/gameList>/ s/.*/${gamelist_info}\n&/" "$gamelistxml" || {
