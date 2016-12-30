@@ -1,14 +1,15 @@
-# RetroPie-joystick-selection
+# RetroPie-joystick-selection <img src="./icon.png" width="48" align="right" />
+
 A script to let the user choose the controllers to use for RetroArch players 1-4. It shows several user-friendly dialog boxes to perform this task. You can set the global and/or the system specific configuration.
 
 The joystick selection has two methods of work:
 
-1. The traditional joystick selection by its index number;
+1. The traditional joystick selection by its index number
 2. The new **joystick selection by name method**
 
 The advantage of the selection by name method is that there is no need to care about the joystick connection order. You can configure your "Generic USB SNES gamepad" to be the player1 no matter what USB port you use. Or, better yet, configure your "Fancy Bluetooth joypad" to be the player1 no matter what was the order it was paired or how many USB joysticks are connected.
 
-It was made for use with RetroPie only [https://retropie.org.uk/].
+It was made for use with [RetroPie](https://retropie.org.uk/) only.
 
 ## Installation
 It's pretty simple to install. Perform these commands on your RetroPie bash prompt:
