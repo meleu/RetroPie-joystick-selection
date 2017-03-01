@@ -22,6 +22,10 @@ bash install.sh
 **After that you are ready to use it via RetroPie menu in emulationstation.**
 
 
+## Donate
+
+I made this tool for personal use and to the friends from the RetroPie community. If you want to support the development, consider a donation to the RetroPie project: https://retropie.org.uk/donate/
+
 ## Screenshots
 
 **Main menu:**
