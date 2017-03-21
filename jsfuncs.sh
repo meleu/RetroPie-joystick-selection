@@ -117,6 +117,8 @@ _EoF_
 # this file is needed to use the joystick selection by name method.
 # Do NOT edit it unless you are absolutely right of what you are doing.
 
+[[ "$4" != *retroarch* ]] && exit 0
+
 source "$rootdir/supplementary/joystick-selection/jsfuncs.sh"
 
 system="\$1"
