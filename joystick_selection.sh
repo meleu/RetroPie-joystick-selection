@@ -176,7 +176,7 @@ function system_js_select_menu() {
                 iniGet "input_player${i}_joypad_index" "$jscfg"
                 if [[ -z "$ini_value" ]]; then
                     js_name_p[$i]="** UNSET **"
-                elif [[ "$ini_value" -eq 32 ]]; then # 32 means disabled
+                elif [[ "$ini_value" == "32" ]]; then # 32 means disabled
                     js_name_p[$i]="** DISABLED **"
                 else
                     js_name_p[$i]="$ini_value $(js_is_connected "$ini_value")"
@@ -187,7 +187,7 @@ function system_js_select_menu() {
                 iniGet "input_player${i}_joypad_index" "$retroarchcfg"
                 if [[ -z "$ini_value" ]]; then
                     js_name_p[$i]="** UNSET **"
-                elif [[ "$ini_value" -eq 32 ]]; then # 32 means disabled
+                elif [[ "$ini_value" == "32" ]]; then # 32 means disabled
                     js_name_p[$i]="** DISABLED **"
                 else
                     js_name_p[$i]="$ini_value:$(js_index2name "$ini_value")"
@@ -253,7 +253,9 @@ function player_js_select_menu() {
     # index "Joystick Name"
     # to use as dialog menu options
     options+=" $(sed 's/:\(.*\)/ "\1"/' "$jslist_file")"
-    options+=" D \"Disable input for player$i\""
+
+    # do not give the option to disable input for player1
+    [[ "$i" -ne 1 ]] && options+=" D \"Disable input for player$i\""
 
     choice=$(
         echo "$options" \
