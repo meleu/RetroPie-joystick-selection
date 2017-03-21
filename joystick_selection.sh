@@ -176,6 +176,8 @@ function system_js_select_menu() {
                 iniGet "input_player${i}_joypad_index" "$jscfg"
                 if [[ -z "$ini_value" ]]; then
                     js_name_p[$i]="** UNSET **"
+                elif [[ "$ini_value" -eq 32 ]]; then # 32 means disabled
+                    js_name_p[$i]="** DISABLED **"
                 else
                     js_name_p[$i]="$ini_value $(js_is_connected "$ini_value")"
                 fi
@@ -185,6 +187,8 @@ function system_js_select_menu() {
                 iniGet "input_player${i}_joypad_index" "$retroarchcfg"
                 if [[ -z "$ini_value" ]]; then
                     js_name_p[$i]="** UNSET **"
+                elif [[ "$ini_value" -eq 32 ]]; then # 32 means disabled
+                    js_name_p[$i]="** DISABLED **"
                 else
                     js_name_p[$i]="$ini_value:$(js_index2name "$ini_value")"
                 fi
@@ -249,6 +253,7 @@ function player_js_select_menu() {
     # index "Joystick Name"
     # to use as dialog menu options
     options+=" $(sed 's/:\(.*\)/ "\1"/' "$jslist_file")"
+    options+=" D \"Disable input for player$i\""
 
     choice=$(
         echo "$options" \
@@ -263,6 +268,15 @@ function player_js_select_menu() {
             U)
                 iniUnset "input_player${i}_joypad_index" "$((i-1))" "$jscfg"
                 iniUnset "input_player${i}_joypad_index" "$((i-1))" "$retroarchcfg"
+            ;;
+
+            D)
+                # index 32 is an ugly workaround to disable joypad input
+                if [[ "$BYNAME" = "ON" ]]; then
+                    iniSet "input_player${i}_joypad_index" "32" "$jscfg"
+                else
+                    iniSet "input_player${i}_joypad_index" "32" "$retroarchcfg"
+                fi
             ;;
 
             *)
