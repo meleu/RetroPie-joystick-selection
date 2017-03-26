@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
-
-# This file is part of The RetroPie Project
-#
-# The RetroPie Project is the legal property of its developers, whose names are
-# too numerous to list here. Please refer to the COPYRIGHT.md file distributed with this source.
-#
-# See the LICENSE.md file at the top-level directory of this distribution and
-# at https://raw.githubusercontent.com/RetroPie/RetroPie-Setup/master/LICENSE.md
-#
+##############
+# ATTENTION! #
+##############
+# This file has changed (26-March-2017). Now it works as RetroPie scriptmodule.
+# Name this file as ~/RetroPie-Setup/scriptmodules/suplementary/joystick-selection.sh
+# and then execute the retropie_setup.sh script.
+# To install the joystick-selection tool, go to
+# Manage packages >> Manage experimental packages >> joystick-selection >> Install from source
 
 rp_module_id="joystick-selection"
 rp_module_desc="Set controllers for RetroArch players 1-4 (global or system specific)."
