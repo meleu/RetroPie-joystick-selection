@@ -12,14 +12,37 @@ The advantage of the selection by name method is that there is no need to care a
 It was made for use with [RetroPie](https://retropie.org.uk/) only.
 
 ## Installation
-It's pretty simple to install. Perform these commands on your RetroPie bash prompt:
+
+**[26-March-2017] The installation procedure has changed!** Now it works as a RetroPie scriptmodule. It has the advantage of having update/remove procedure.
+
+Download the RetroPie scriptmodule:
 ```
-git clone https://github.com/meleu/RetroPie-joystick-selection
-cd RetroPie-joystick-selection
-bash install.sh
+wget https://raw.githubusercontent.com/meleu/RetroPie-joystick-selection/master/install.sh -o ~/RetroPie-Setup/scriptmodules/supplementary/joystick-selection.sh
 ```
 
+And then execute the `retropie_setup.sh` script:
+```
+sudo ~/RetroPie-Setup/retropie_setup.sh
+```
+
+To install the joystick-selection tool, go to
+
+*Manage packages* >> *Manage experimental packages* >> *joystick-selection* >> *Install from source*
+
+
 **After that you are ready to use it via RetroPie menu in emulationstation.**
+
+
+## Update
+
+After installing, you can update it through RetroPie-Setup. First execute `retropie_setup.sh` script:
+```
+sudo ~/RetroPie-Setup/retropie_setup.sh
+```
+
+To update the joystick-selection tool, go to
+
+*Manage packages* >> *Manage experimental packages* >> *joystick-selection* >> *Update from source*
 
 
 ## Donate
