@@ -1,103 +1,70 @@
 #!/usr/bin/env bash
-# install.sh
 ##############
-# A bash script to perform the following tasks:
-# - delete the old "RetroPie-input-selection" scheme if it's installed.
-# - compile jslist.c.
-# - put jsfuncs.sh and the compiled jsfuncs in
-#   /opt/retropie/supplementary/joystick-selection directory.
-# - put joystick_selection.sh in $HOME/RetroPie/retropiemenu/ directory.
-# - create a gamelist.xml entry for joystick_selection.sh
-#
+# ATTENTION! #
+##############
+# This file has changed (26-March-2017). Now it works as RetroPie scriptmodule.
+# Name this file as ~/RetroPie-Setup/scriptmodules/suplementary/joystick-selection.sh
+# and then execute the retropie_setup.sh script.
+# To install the joystick-selection tool, go to
+# Manage packages >> Manage experimental packages >> joystick-selection >> Install from source
 
+rp_module_id="joystick-selection"
+rp_module_desc="Set controllers for RetroArch players 1-4 (global or system specific)."
+rp_module_help="Follow the instructions on the dialogs to configure which joystick to use for RetroArch players 1-4 (global or system specific)."
+rp_module_section="exp"
 
-# checking paths
-[[ -d "/opt/retropie/" ]] && [[ -d "$HOME/RetroPie/retropiemenu/" ]] || {
-    echo "*** Error: it seems that you installed RetroPie in some unusual directories." >&2
-    echo "Currently this joystick-selection tool only works for RetroPie with default paths." >&2
-    echo "Aborting..."
-    exit 1
+function depends_joystick-selection() {
+    getDepends "libsdl2-dev"
 }
 
-
-# removing the old selection scheme...
-############################################
-sudo rm -f \
-  "$HOME/bin/jslist" \
-  "$HOME/bin/input_selection.sh" \
-  "$HOME/RetroPie/retropiemenu/input_selection.sh" \
-  "/opt/retropie/configs/all/input-selection.cfg" \
-  "/opt/retropie/configs/all/joystick-selection.cfg" \
-  "/opt/retropie/supplementary/jslist"
-
-sudo sed -i '
-    /^#.*The following line was added to allow joystick selection/d
-    /#include "\/opt\/retropie\/configs\/all\/joystick-selection.cfg"/d
-    /#include "\/opt\/retropie\/configs\/all\/input-selection.cfg"/d
-  ' "/opt/retropie/configs/all/retroarch.cfg"
-
-rmdir "$HOME/bin" 2>/dev/null
-############################################
-
-install_dir="/opt/retropie/supplementary/joystick-selection"
-sudo mkdir -p "$install_dir"
-
-echo -n "Compiling \"jslist.c\" and putting it in \"$install_dir\"..."
-sudo gcc jslist.c \
-  -o "$install_dir/jslist" $(sdl2-config --cflags --libs) || {
-    echo -e "\nSomething wrong with the compilation process. Aborting..."
-    exit 1
-}
-echo " OK!"
-
-echo -n "Putting \"jsfuncs.sh\" in \"$install_dir\"..."
-sudo cp jsfuncs.sh "$install_dir" || {
-    echo -e "\nUnable to put \"jsfuncs.sh\" in \"$install_dir\". Aborting."
-    exit 1
-}
-echo " OK!"
-
-echo -n "Putting \"joystick_selection.sh\" in \"$HOME/RetroPie/retropiemenu/\"..."
-cp joystick_selection.sh "$HOME/RetroPie/retropiemenu/joystick_selection.sh" || {
-    echo -e "\nUnable to put \"joystick_selection.sh\" in \"$HOME/RetroPie/retropiemenu/\". Aborting."
-    exit 1
-}
-echo " OK!"
-
-echo -n "Putting \"icon.png\" in \"$HOME/RetroPie/retropiemenu/icons\"..."
-cp icon.png "$HOME/RetroPie/retropiemenu/icons/joystick_selection.png" || {
-    echo -e "\nUnable to put \"icon.png\" in \"$HOME/RetroPie/retropiemenu/icons\". Aborting."
-    exit 1
-}
-echo " OK!"
-
-echo -n "Creating a gamelist.xml entry for joystick_selection.sh..."
-gamelistxml="$HOME/RetroPie/retropiemenu/gamelist.xml"
-[[ -f "$gamelistxml" ]] || {
-    cp "/opt/retropie/configs/all/emulationstation/gamelists/retropie/gamelist.xml" \
-      "$gamelistxml"
+function sources_joystick-selection() {
+    gitPullOrClone "$md_build" "https://github.com/meleu/RetroPie-joystick-selection.git"
 }
 
-grep -q "<path>./joystick_selection.sh</path>" "$gamelistxml" && {
-    echo " OK!!"
-    exit 0
+function build_joystick-selection() {
+    gcc "$md_build/jslist.c" -o "$md_build/jslist" $(sdl2-config --cflags --libs)
 }
 
-gamelist_info='\
-	<game>\
-		<path>.\/joystick_selection.sh<\/path>\
-		<name>Joystick Selection<\/name>\
-		<desc>Select which joystick to use for RetroArch players 1-4 (global or system specific).<\/desc>\
-		<image>.\/icons\/joystick_selection.png<\/image>\
-	<\/game>'
+function install_joystick-selection() {
+    local gamelistxml="$datadir/retropiemenu/gamelist.xml"
 
-sudo sed -i.bak "/<\/gameList>/ s/.*/${gamelist_info}\n&/" "$gamelistxml" || {
-    echo "Warning: Unable to edit \"$gamelistxml\"."
-    exit 1
+    ln -sfv "$md_inst/joystick_selection.sh" "$datadir/retropiemenu/joystick_selection.sh"
+    cp -v "$md_build/icon.png" "$datadir/retropiemenu/icons/joystick_selection.png"
+
+    cp -nv "$configdir/all/emulationstation/gamelists/retropie/gamelist.xml" "$gamelistxml"
+    if grep -vq "<path>./joystick_selection.sh</path>" "$gamelistxml"; then
+        xmlstarlet ed -L -P -s "/gameList" -t elem -n "gameTMP" \
+            -s "//gameTMP" -t elem -n path -v "./joystick_selection.sh" \
+            -s "//gameTMP" -t elem -n name -v "Joystick Selection" \
+            -s "//gameTMP" -t elem -n desc -v "Select which joystick to use for RetroArch players 1-4 (global or system specific)." \
+            -s "//gameTMP" -t elem -n image -v "./icons/joystick_selection.png" \
+            -r "//gameTMP" -v "game" \
+            "$gamelistxml"
+
+        # XXX: I don't know why the -P (preserve original formatting) isn't working,
+        #      The new xml element for joystick_selection tool are all in only one line.
+        #      Then let's format gamelist.xml.
+        local tmpxml=$(mktemp)
+        xmlstarlet fo -t "$gamelistxml" > "$tmpxml"
+        cat "$tmpxml" > "$gamelistxml"
+        rm -f "$tmpxml"
+    fi
+
+    # needed for proper permissions for gamelist.xml and icons/joystick_selection.png
+    chown -R $user:$user "$datadir/retropiemenu"
+
+    md_ret_files=(
+        'jslist'
+        'jsfuncs.sh'
+        'joystick_selection.sh'
+    )
 }
-echo " OK!"
 
-# ensuring that the /opt/retropie/configs/all dir is owned by the user
-user="$SUDO_USER"
-[[ -z "$user" ]] && user=$(id -un)
-sudo chown $user.$user /opt/retropie/configs/all
+function remove_joystick-selection() {
+    rm -rfv "$configdir"/*/joystick-selection.cfg "$datadir/retropiemenu/icons/joystick_selection.png" "$datadir/retropiemenu/joystick_selection.sh"
+    xmlstarlet ed -P -L -d "/gameList/game[contains(path,'joystick_selection.sh')]" "$datadir/retropiemenu/gamelist.xml"
+}
+
+function gui_joystick-selection() {
+    bash "$md_inst/joystick_selection.sh"
+}
