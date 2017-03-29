@@ -16,9 +16,7 @@ It was made for use with [RetroPie](https://retropie.org.uk/) only.
 **[26-March-2017] The installation procedure has changed!** Now it works as a RetroPie scriptmodule. It has the advantage of having update/remove procedure.
 
 Download the RetroPie scriptmodule:
-```
-wget https://raw.githubusercontent.com/meleu/RetroPie-joystick-selection/master/install.sh -o ~/RetroPie-Setup/scriptmodules/supplementary/joystick-selection.sh
-```
+```curl https://raw.githubusercontent.com/meleu/RetroPie-joystick-selection/master/install.sh -o ~/RetroPie-Setup/scriptmodules/supplementary/joystick-selection.sh```
 
 And then execute the `retropie_setup.sh` script:
 ```
