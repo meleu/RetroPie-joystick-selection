@@ -194,7 +194,7 @@ function fill_jslist_file() {
     # a sequential number at the end of the repeated ones
     # credit goes to fedorqui (http://stackoverflow.com/users/1983854/fedorqui)
     awk -F: 'FNR==NR {count[$2]++; next}
-             count[$2]>1 {$0=$0 OFS "#"++times[$2]}
+             count[$2]>0 {$0=$0 OFS "#"++times[$2]}
              1' "$temp_file" "$temp_file" > "$jslist_file"
 }
 
