@@ -47,12 +47,10 @@ To update the joystick-selection tool, go to
 ## Donate
 
 If you would like to buy me a beer and say thanks, click on the button bellow.
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-  <input type="hidden" name="cmd" value="_s-xclick">
-  <input type="hidden" name="hosted_button_id" value="ZZ3ZN4T7D65EY">
-  <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-  <img alt="buy me a beer :)" border="0" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" width="1" height="1">
-</form>
+
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZZ3ZN4T7D65EY">
+  <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="Donate with PayPal" align="center"/>
+</a>
 
 ## Screenshots
 
