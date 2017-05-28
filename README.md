@@ -46,7 +46,13 @@ To update the joystick-selection tool, go to
 
 ## Donate
 
-I made this tool for personal use and to the friends from the RetroPie community. If you want to support the development, consider a donation to the RetroPie project: https://retropie.org.uk/donate/
+If you would like to buy me a beer and say thanks, click on the button bellow.
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="ZZ3ZN4T7D65EY">
+<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+</form>
 
 ## Screenshots
 
