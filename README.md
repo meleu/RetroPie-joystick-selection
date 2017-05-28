@@ -51,7 +51,7 @@ If you would like to buy me a beer and say thanks, click on the button bellow.
   <input type="hidden" name="cmd" value="_s-xclick">
   <input type="hidden" name="hosted_button_id" value="ZZ3ZN4T7D65EY">
   <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-  <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+  <img alt="buy me a beer :)" border="0" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" width="1" height="1">
 </form>
 
 ## Screenshots
