@@ -27,8 +27,12 @@ function build_joystick-selection() {
 
 function install_joystick-selection() {
     local gamelistxml="$datadir/retropiemenu/gamelist.xml"
+    local rpmenu_js_sh="$datadir/retropiemenu/joystick_selection.sh"
 
-    ln -sfv "$md_inst/joystick_selection.sh" "$datadir/retropiemenu/joystick_selection.sh"
+    ln -sfv "$md_inst/joystick_selection.sh" "$rpmenu_js_sh"
+    # maybe the user is using a partition that doesn't support symbolic links...
+    [[ -L "$rpmenu_js_sh" ]] || cp -v "$md_inst/joystick_selection.sh" "$rpmenu_js_sh"
+
     cp -v "$md_build/icon.png" "$datadir/retropiemenu/icons/joystick_selection.png"
 
     cp -nv "$configdir/all/emulationstation/gamelists/retropie/gamelist.xml" "$gamelistxml"
