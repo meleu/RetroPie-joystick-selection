@@ -13,33 +13,27 @@ It was made for use with [RetroPie](https://retropie.org.uk/) only.
 
 ## Installation
 
-**[26-March-2017] The installation procedure has changed!** Now it works as a RetroPie scriptmodule. It has the advantage of having update/remove procedure.
+**[30-June-2017] The installation procedure has changed (*again*)!**
 
-Download the RetroPie scriptmodule:
+Some people were having issues with the previous installation procedure, then I changed it to simplify things.
 
-```curl https://raw.githubusercontent.com/meleu/RetroPie-joystick-selection/master/install.sh -o ~/RetroPie-Setup/scriptmodules/supplementary/joystick-selection.sh```
+Download the `install.sh` script and make it executable:
 
-And then execute the `retropie_setup.sh` script:
 ```
-sudo ~/RetroPie-Setup/retropie_setup.sh
+curl https://raw.githubusercontent.com/meleu/RetroPie-joystick-selection/master/install.sh
+chmod a+x install.sh
 ```
 
-To install the joystick-selection tool, go to
+The script will automatically download the joystick-selection scriptmodule and install everything you need.
 
-*Manage packages* >> *Manage experimental packages* >> *joystick-selection* >> *Install from source*
-
-
-**After that you are ready to use it via RetroPie menu in emulationstation.**
+**After that you are ready to use it via RetroPie menu in emulationstation (maybe you'll need to restart emulationstation).**
 
 
 ## Update
 
-After installing, you can update it through RetroPie-Setup. First execute `retropie_setup.sh` script:
-```
-sudo ~/RetroPie-Setup/retropie_setup.sh
-```
+After installing, you can update it through RetroPie-Setup.
 
-To update the joystick-selection tool, go to
+To update the joystick-selection tool, go to RetroPie-Setup and:
 
 *Manage packages* >> *Manage experimental packages* >> *joystick-selection* >> *Update from source*
 
