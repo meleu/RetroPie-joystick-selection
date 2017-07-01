@@ -530,7 +530,7 @@ function system_js_select_menu() {
                 iniGet "input_player${i}_joypad_index" "$jscfg"
                 if [[ -z "$ini_value" ]]; then
                     js_name_p[$i]="** UNSET **"
-                elif [[ "$ini_value" == "32" ]]; then # 32 means disabled
+                elif [[ "$ini_value" == "16" ]]; then # 16 means disabled
                     js_name_p[$i]="** DISABLED **"
                 else
                     js_name_p[$i]="$ini_value $(js_is_connected "$ini_value")"
@@ -541,7 +541,7 @@ function system_js_select_menu() {
                 iniGet "input_player${i}_joypad_index" "$retroarchcfg"
                 if [[ -z "$ini_value" ]]; then
                     js_name_p[$i]="** UNSET **"
-                elif [[ "$ini_value" == "32" ]]; then # 32 means disabled
+                elif [[ "$ini_value" == "16" ]]; then # 16 means disabled
                     js_name_p[$i]="** DISABLED **"
                 else
                     js_name_p[$i]="$ini_value:$(js_index2name "$ini_value")"
@@ -630,11 +630,11 @@ function player_js_select_menu() {
             ;;
 
             D)
-                # index 32 is an ugly workaround to disable joypad input
+                # index 16 is an ugly workaround to disable joypad input
                 if [[ "$BYNAME" = "ON" ]]; then
-                    iniSet "input_player${i}_joypad_index" "32" "$jscfg"
+                    iniSet "input_player${i}_joypad_index" "16" "$jscfg"
                 else
-                    iniSet "input_player${i}_joypad_index" "32" "$retroarchcfg"
+                    iniSet "input_player${i}_joypad_index" "16" "$retroarchcfg"
                 fi
             ;;
 
