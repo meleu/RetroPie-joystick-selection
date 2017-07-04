@@ -1,7 +1,10 @@
 #!/bin/bash
 # installing RetroPie-joystick-selection tool
 
-readonly RP_SETUP_DIR="$HOME/RetroPie-Setup"
+user="$SUDO_USER"
+[[ -z "$user" ]] && user="$(id -un)"
+home="$(eval echo ~$user)"
+readonly RP_SETUP_DIR="$home/RetroPie-Setup"
 readonly JS_SCRIPTMODULE_FULL="$RP_SETUP_DIR/scriptmodules/supplementary/joystick-selection.sh"
 readonly JS_SCRIPTMODULE_URL="https://raw.githubusercontent.com/meleu/RetroPie-joystick-selection/master/js-scriptmodule.sh"
 readonly JS_SCRIPTMODULE="$(basename "${JS_SCRIPTMODULE_FULL%.*}")"
