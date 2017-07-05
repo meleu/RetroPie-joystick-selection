@@ -23,4 +23,4 @@ if [[ ! -s "$JS_SCRIPTMODULE_FULL" ]]; then
 fi
 
 sudo "$RP_SETUP_DIR/retropie_packages.sh" "$JS_SCRIPTMODULE"
-sudo "$RP_SETUP_DIR/retropie_packages.sh "$JS_SCRIPTMODULE" gui
+sudo "$RP_SETUP_DIR/retropie_packages.sh" "$JS_SCRIPTMODULE" gui
