@@ -21,7 +21,7 @@ Some people were having issues with the previous installation procedure, then I 
 Download the `install.sh` script, make it executable, and launch it:
 
 ```
-curl https://raw.githubusercontent.com/meleu/RetroPie-joystick-selection/master/install.sh
+curl https://raw.githubusercontent.com/meleu/RetroPie-joystick-selection/master/install.sh -o install.sh
 chmod a+x install.sh
 ./install.sh
 ```
