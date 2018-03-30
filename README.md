@@ -26,7 +26,7 @@ curl https://raw.githubusercontent.com/meleu/RetroPie-joystick-selection/master/
 bash install.sh
 ```
 
-3. The script will automatically download the joystick-selection scriptmodule and install everything you need. Aafter installation you can safely delete the `install.sh` file:
+3. The script will automatically download the joystick-selection scriptmodule and install everything you need. After installation you can safely delete the `install.sh` file:
 
 ```bash
 rm install.sh
