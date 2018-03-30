@@ -32,7 +32,11 @@ bash install.sh
 rm install.sh
 ```
 
-4. **After that you are ready to use it via RetroPie menu in emulationstation (maybe you'll need to restart emulationstation).**
+4. **After that you are ready to use it via RetroPie menu in emulationstation:**
+
+```bash
+emulationstation
+```
 
 
 ## Update
