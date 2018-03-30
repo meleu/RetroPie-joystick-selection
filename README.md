@@ -17,20 +17,22 @@ It was made for use with [RetroPie](https://retropie.org.uk/) only.
 
 Some people were having issues with the previous installation procedure, then I changed it to simplify things.
 
+1. If you're on EmulationStation, press `F4` to go to the Command Line Interface.
 
-Download the `install.sh` script, make it executable, and launch it:
+2. Download the `install.sh` script, and launch it:
 
-```
+```bash
 curl https://raw.githubusercontent.com/meleu/RetroPie-joystick-selection/master/install.sh -o install.sh
 bash install.sh
+```
 
-# after successfully installing you can safely remove the install.sh script
+3. The script will automatically download the joystick-selection scriptmodule and install everything you need. Aafter installation you can safely delete the `install.sh` file:
+
+```bash
 rm install.sh
 ```
 
-The script will automatically download the joystick-selection scriptmodule and install everything you need (after installation you can safely delete the `install.sh` file).
-
-**After that you are ready to use it via RetroPie menu in emulationstation (maybe you'll need to restart emulationstation).**
+4. **After that you are ready to use it via RetroPie menu in emulationstation (maybe you'll need to restart emulationstation).**
 
 
 ## Update
