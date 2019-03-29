@@ -66,7 +66,7 @@ fi
 # checking for runcommand-menu feature
 jsonmenu="/opt/retropie/configs/all/runcommand-menu/select joystick.sh"
 if [[ ! -s "$jsonmenu" ]]; then
-    mkdir -p "$(dirname $jsonmenu)"
+    mkdir -p "$(dirname "$jsonmenu")"
     cat > "$jsonmenu" << _EoF_
 system="\$1"
 game="\$(basename "\$3")"
