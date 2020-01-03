@@ -13,10 +13,6 @@ It was made for use with [RetroPie](https://retropie.org.uk/) only.
 
 ## Installation
 
-**[30-June-2017] The installation procedure has changed (*again*)!**
-
-Some people were having issues with the previous installation procedure, then I changed it to simplify things.
-
 1. If you're on EmulationStation, press `F4` to go to the Command Line Interface.
 
 2. Download the `install.sh` script, and launch it:
@@ -98,6 +94,6 @@ If you would like to buy me a beer and say thanks, click the button below.
 
 
 ## Known Issues
+
 - If you are using joysticks with equal names, then, yes, the connection order matters.
-- **[This issue doesn't happen if you use the joystick selection by name method]** If the joystick list order changes (adding/removing devices), your configuration changes too. So you have to run `joystick_selection.sh` again.
 - **[This is RetroArch issue. It doesn't happen because of the joystick selection tool]** Due to the dynamic nature of bluetooth connections, if you configure a bluetooth joystick as Player 1, and somehow lose the connection during a game, if you don't have a keyboard plugged in it'll be annoying to exit RetroArch (connect to RetroPie via ssh and kill RetroArch process. If your raspi isn't on the LAN, :( I think you'll have to unplug your power supply.).
