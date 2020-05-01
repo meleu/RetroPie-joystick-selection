@@ -18,8 +18,7 @@ It was made for use with [RetroPie](https://retropie.org.uk/) only.
 2. Download the `install.sh` script, and launch it:
 
 ```bash
-curl https://raw.githubusercontent.com/meleu/RetroPie-joystick-selection/master/install.sh -o install.sh
-bash install.sh
+wget -O- "https://raw.githubusercontent.com/meleu/RetroPie-joystick-selection/master/install.sh" | sudo bash
 ```
 
 3. The script will automatically download the joystick-selection scriptmodule and install everything you need. After installation you can safely delete the `install.sh` file:
