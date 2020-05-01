@@ -86,7 +86,6 @@ If you would like to buy me a beer and say thanks, click the button below.
 
 
 
-## Known Issues
+## Limitation
 
 - If you are using joysticks with equal names, then, yes, the connection order matters.
-- **[This is RetroArch issue. It doesn't happen because of the joystick selection tool]** Due to the dynamic nature of bluetooth connections, if you configure a bluetooth joystick as Player 1, and somehow lose the connection during a game, if you don't have a keyboard plugged in it'll be annoying to exit RetroArch (connect to RetroPie via ssh and kill RetroArch process. If your raspi isn't on the LAN, :( I think you'll have to unplug your power supply.).
