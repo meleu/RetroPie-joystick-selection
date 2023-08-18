@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # joystick_selection.sh
 #######################
-# Let the user define which controller to use for RetroArch players 1-4,
+# Let the user define which controller to use for RetroArch players 1-8,
 # global and system specific.
 #
 # The joystick selection has two methods of work: 1) selection by joystick
@@ -36,7 +36,7 @@
 #
 # TODO:
 #       - if joystick selection by name is on AND config_save_on_exit is on AND
-#         the user changes the joypads for players1-4 via RGUI, the
+#         the user changes the joypads for players1-8 via RGUI, the
 #         joystick-selection will override these changes when launching again.
 #         Needs a simple workaround using runcommand-onend.sh. Easy to solve.
 #
