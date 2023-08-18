@@ -335,7 +335,7 @@ function js_to_retroarchcfg() {
     fill_jslist_file
 
     local js_index
-    for i in 1 2 3 4; do
+    for i in 1 2 3 4 5 6 7 8; do
         iniGet "input_player${i}_joypad_index" "$jscfg"
         js_index=$(js_name2index "$ini_value")
 
@@ -351,7 +351,7 @@ function js_to_retroarchcfg() {
 
 ###############################################################################
 # Create a joystick-selection.cfg for the system given as argument. 
-# The created file will be filled with the input_player[1-4]_joypad_index
+# The created file will be filled with the input_player[1-8]_joypad_index
 # values from the respective retroarch.cfg.
 #
 # Globals:
@@ -378,7 +378,7 @@ function retroarch_to_jscfg() {
 # This file was created by the joystick-selection tool.
 # It's recommended to NOT edit it manually.
 # The format is pretty simmilar to a retroarch.cfg file, but it contains only
-# input_player[1-4]_joypad_index, and accepts "strings" as a value.
+# input_player[1-8]_joypad_index, and accepts "strings" as a value.
 # Example:
 # input_playerN_joypad_index = "joystick name"
 # If "joystick name" is an integer, then the real joystick index is used.
@@ -394,7 +394,7 @@ _EoF_
         fi
     fi
 
-    for i in 1 2 3 4; do
+    for i in 1 2 3 4 5 6 7 8; do
         iniGet "input_player${i}_joypad_index" "$retroarchcfg"
         if [[ -z "$ini_value" ]]; then
             iniUnset "input_player${i}_joypad_index" "$((i-1))" "$jscfg"
@@ -455,7 +455,7 @@ function toggle_byname() {
         # get all the systems *joypad_index configs and convert to an
         # equivalent joystick-selection.cfg
         for file in $(find "$configdir" -name retroarch.cfg 2>/dev/null); do
-            if grep -q "^[[:space:]#]*input_player[1-4]_joypad_index[[:space:]]*=" "$file"; then
+            if grep -q "^[[:space:]#]*input_player[1-8]_joypad_index[[:space:]]*=" "$file"; then
                 system=${file%/*}
                 system=${system//$configdir\//}
                 retroarch_to_jscfg "$system"
@@ -472,7 +472,7 @@ function main_menu() {
     while true; do
         cmd=(dialog \
              --title " Joystick Selection Main Menu " \
-             --menu "${byname_msg}This is a tool to let you choose which controller to use for RetroArch players 1-4" 19 80 12)
+             --menu "${byname_msg}This is a tool to let you choose which controller to use for RetroArch players 1-8" 19 80 12)
         options=(
             1 "Global joystick selection."
             2 "System specific joystick selection."
@@ -526,7 +526,7 @@ function system_js_select_menu() {
     while true; do
         # the 'if' outside the 'for' is for a performance reason
         if [[ "$BYNAME" = "ON" ]]; then
-            for i in 1 2 3 4; do
+            for i in 1 2 3 4 5 6 7 8; do
                 iniGet "input_player${i}_joypad_index" "$jscfg"
                 if [[ -z "$ini_value" ]]; then
                     js_name_p[$i]="** UNSET **"
@@ -537,7 +537,7 @@ function system_js_select_menu() {
                 fi
             done
         else
-            for i in 1 2 3 4; do
+            for i in 1 2 3 4 5 6 7 8; do
                 iniGet "input_player${i}_joypad_index" "$retroarchcfg"
                 if [[ -z "$ini_value" ]]; then
                     js_name_p[$i]="** UNSET **"
@@ -559,6 +559,10 @@ function system_js_select_menu() {
             2 "${js_name_p[2]}"
             3 "${js_name_p[3]}"
             4 "${js_name_p[4]}"
+            5 "${js_name_p[5]}"
+            6 "${js_name_p[6]}"
+            7 "${js_name_p[7]}"
+            8 "${js_name_p[8]}"
         )
         choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
     
@@ -590,13 +594,13 @@ function system_js_select_menu() {
 #   None
 #
 # Arguments:
-#   $1  an integer [1-4] that represents the player.
+#   $1  an integer [1-8] that represents the player.
 #   $2  the system to configure
 #
 # Returns:
 #   0
 function player_js_select_menu() {
-    [[ "$1" =~ ^[1-4]$ ]] || fatalError "player_js_select_menu: invalid argument!"
+    [[ "$1" =~ ^[1-8]$ ]] || fatalError "player_js_select_menu: invalid argument!"
     [[ "$2" ]] && [[ -d "$configdir/$2" ]] || fatalError "player_js_select_menu: arg2 must be a valid system!"
 
     local i="$1"
